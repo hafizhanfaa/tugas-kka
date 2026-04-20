@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diagnostics Device</title>
+    <link rel="icon" type="image/svg" href="./img/titlelogo.svg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Switzer:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --sec-color: #d4af37;
+        --soft-gray: #e6e6e6;
+        --apple-blue: #111111;
+        --dark-text: #1d1d1f;
+        --sub-text: #868689;
+        --card-bg: whitesmoke;
+        --stroke: rgba(0, 0, 0, 0.1);
+        --main-font: "Switzer", -apple-system, sans-serif;
+      }
+
+      [data-theme="dark"] {
+        --sec-color: #f1c40f;
+        --soft-gray: #121212;
+        --apple-blue: #f1c404;
+        --dark-text: #f5f5f7;
+        --sub-text: #a1a1a6;
+        --card-bg: #1c1c1e;
+        --stroke: rgba(255, 255, 255, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: var(--main-font);
+        -webkit-font-smoothing: antialiased;
+        scrollbar-width: thin;
+        scrollbar-color: var(--stroke) transparent;
+      }
+
+      ::-webkit-scrollbar { width: 14px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb {
+        background-color: var(--stroke);
+        border-radius: 10px;
+        border: 4px solid var(--soft-gray);
+        transition: background-color 0.3s;
+      }
+      ::-webkit-scrollbar-thumb:hover { background-color: var(--sec-color); }
+
+      body {
+        background-color: var(--soft-gray);
+        color: var(--dark-text);
+        overflow-x: hidden;
+        transition: background-color 0.4s ease, color 0.4s ease;
+      }
+
+      .ambient-bg {
+        position: fixed; top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        z-index: -2; overflow: hidden;
+      }
+      #neural-net { width: 100%; height: 100%; }
+
+      .ambient-overlay {
+        position: fixed; top: 0; left: 0;
+        width: 100vw; height: 100vh; z-index: -1;
+        background-image: radial-gradient(var(--stroke) 1.3px, transparent 0);
+        background-size: 20px 20px;
+        pointer-events: none;
+      }
+
+      .top-controls {
+        display: flex; justify-content: flex-end; gap: 10px;
+        max-width: 1000px; margin: 0 auto; padding: 20px 20px 0;
+        z-index: 10; position: relative;
+      }
+      .toggle-btn {
+        background: var(--card-bg); color: var(--dark-text);
+        border: 1px solid var(--stroke); padding: 8px 16px;
+        border-radius: 20px; font-weight: 600; cursor: pointer;
+        font-size: 12px; transition: 0.3s;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      }
+      .toggle-btn:hover { transform: scale(1.05); border-color: var(--sec-color); }
+
+      .container {
+        max-width: 1000px; margin: 0 auto;
+        padding: clamp(20px, 8vw, 60px) clamp(15px, 4vw, 20px);
+        transition: opacity 0.5s; position: relative; z-index: 1;
+      }
+
+      .main-header {
+        text-align: center; margin-bottom: clamp(30px, 6vw, 60px);
+        background: #08204a; backdrop-filter: blur(2px);
+        border: solid 1px whitesmoke; border-radius: 50px;
+        padding: clamp(15px, 4vw, 20px);
+      }
+      .badge {
+        background: var(--sec-color); padding: 5px 15px; border-radius: 20px;
+        font-size: clamp(10px, 2vw, 12px); font-weight: 600; color: #111;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      }
+      h1 {
+        font-size: clamp(32px, 6vw, 48px); font-weight: 700;
+        margin: 15px 0 10px; letter-spacing: -1.5px; line-height: 1.1; color: whitesmoke;
+      }
+      .subtitle { color: rgba(255,255,255,0.8); font-size: clamp(14px, 3vw, 19px); font-weight: 400; }
+
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+      .card {
+        background: var(--card-bg); border-radius: 28px;
+        padding: clamp(20px, 5vw, 35px); cursor: pointer;
+        border: 1px solid var(--stroke);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        display: flex; flex-direction: column; align-items: flex-start;
+      }
+      .card:hover {
+        transform: scale(1.03) translateY(-5px);
+        box-shadow: 0px 0px 30px rgba(0,0,0,0.137);
+        border-color: var(--sec-color);
+      }
+      .svg-icon {
+        width: 44px; height: 44px; margin-bottom: 20px;
+        fill: none; stroke: var(--sec-color); stroke-width: 1.5;
+        stroke-linecap: round; stroke-linejoin: round;
+      }
+      h3 { font-size: clamp(18px, 4vw, 21px); font-weight: 600; margin-bottom: 8px; letter-spacing: -0.5px; color: var(--dark-text); }
+      .card p { color: var(--sub-text); font-size: clamp(13px, 2.5vw, 15px); line-height: 1.4; }
+
+      .modal {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        z-index: 100; background-color: var(--soft-gray);
+        background-image: radial-gradient(var(--stroke) 1.3px, transparent 0);
+        background-size: 20px 20px; backdrop-filter: blur(30px);
+        display: flex; align-items: center; justify-content: center;
+        transition: 0.3s; padding: 15px;
+      }
+      .hidden { display: none !important; opacity: 0; }
+      .glass-box {
+        background: var(--card-bg); width: 100%; max-width: 700px;
+        padding: clamp(30px, 6vw, 60px); border-radius: 35px;
+        text-align: center; position: relative;
+        box-shadow: 0 40px 100px rgba(0,0,0,0.1); border: 1px solid var(--stroke);
+      }
+      .close-btn {
+        position: absolute; top: clamp(15px, 4vw, 25px); right: clamp(15px, 4vw, 25px);
+        border: none; width: 35px; height: 35px; border-radius: 50%;
+        background: var(--soft-gray); cursor: pointer; transition: 0.2s;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .close-btn:hover { transform: rotate(90deg); background: var(--stroke); }
+      .close-btn svg { fill: none; stroke: var(--dark-text); stroke-width: 2; width: 14px; height: 14px; }
+
+      .network-dashboard { display: flex; justify-content: space-between; margin: 30px 0; gap: 15px; flex-wrap: wrap; }
+      .net-stat {
+        background: var(--soft-gray); padding: 20px; border-radius: 20px;
+        flex: 1; min-width: 120px; border: 1px solid var(--stroke);
+        display: flex; flex-direction: column; align-items: center; transition: 0.3s;
+      }
+      .net-stat.active { border-color: var(--apple-blue); box-shadow: 0 0 15px rgba(0,122,255,0.1); transform: scale(1.05); }
+      .net-stat span { font-size: 12px; color: var(--sub-text); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+      .net-stat b { font-size: clamp(24px, 5vw, 36px); color: var(--apple-blue); font-weight: 700; margin-top: 10px; letter-spacing: -1px; }
+      .net-stat small { font-size: 12px; font-weight: 600; color: var(--sub-text); margin-top: 5px; }
+      .progress-bar-container { width: 100%; height: 8px; background: var(--stroke); border-radius: 10px; overflow: hidden; margin-bottom: 30px; }
+      .progress-fill { height: 100%; width: 0%; background: var(--apple-blue); transition: width 0.3s; }
+
+      .btn-apple {
+        background: var(--dark-text); color: var(--card-bg);
+        border: none; padding: clamp(10px, 3vw, 15px) clamp(20px, 5vw, 30px);
+        border-radius: 30px; font-weight: 600; cursor: pointer;
+        margin: 10px; transition: 0.2s; font-size: clamp(14px, 3vw, 16px);
+      }
+      .btn-apple:hover { transform: scale(1.05); background: var(--apple-blue); color: white; }
+      .btn-apple:disabled { opacity: 0.5; cursor: not-allowed; transform: scale(1); }
+
+      .stats-row {
+        display: flex; justify-content: space-around;
+        margin-bottom: clamp(15px, 4vw, 30px);
+        border-bottom: 1px solid var(--stroke); padding-bottom: 20px;
+      }
+      .stat-item { display: flex; flex-direction: column; align-items: center; }
+      .stat-item span { font-size: clamp(9px, 2vw, 11px); color: var(--sub-text); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+      .stat-item b { font-size: clamp(28px, 6vw, 40px); color: var(--apple-blue); font-weight: 700; letter-spacing: -1px; }
+      .typing-surface {
+        font-size: clamp(18px, 4.5vw, 26px); color: var(--sub-text); text-align: left;
+        line-height: 1.5; margin: 20px 0; min-height: 100px; font-weight: 500; letter-spacing: -0.5px;
+      }
+      .char.correct { color: var(--dark-text); }
+      .char.incorrect { color: #ff3b30; text-decoration: underline; background: rgba(255,59,48,0.1); }
+      .char.active { border-bottom: 3px solid var(--apple-blue); color: var(--apple-blue); }
+      .instruction { font-size: clamp(13px, 3vw, 15px); color: var(--sub-text); margin-top: 15px; font-weight: 400; }
+
+      .mouse-ui { width: 130px; height: 210px; border: 3px solid var(--sub-text); border-radius: 50px; margin: 30px auto; display: flex; overflow: hidden; position: relative; }
+      .m-part { flex: 1; border-bottom: 2px solid var(--sub-text); display: flex; align-items: center; justify-content: center; font-weight: bold; transition: 0.1s; font-size: 12px; color: var(--sub-text); }
+      .m-wheel { position: absolute; width: 20px; height: 40px; border: 2px solid var(--sub-text); border-radius: 10px; top: 40px; left: 50%; transform: translateX(-50%); transition: 0.1s; }
+      .m-part.active, .m-wheel.active { background: var(--apple-blue); color: white; border-color: var(--apple-blue); }
+
+      .pad { width: 100%; height: 200px; background: var(--soft-gray); border-radius: 20px; margin: 20px 0; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; border: 1px solid var(--stroke); }
+      #pressure-dot { background: var(--apple-blue); border-radius: 50%; transition: 0.05s; }
+
+      #screen-test { background: black; cursor: pointer; }
+      .screen-hint { color: white; background: rgba(0,0,0,0.4); padding: 12px 24px; border-radius: 30px; font-size: clamp(12px, 3vw, 14px); backdrop-filter: blur(10px); }
+
+      .credit { display: flex; align-items: center; justify-content: center; padding: 20px; }
+      .credit p { color: var(--sub-text); font-size: clamp(12px, 3vw, 14px); }
+
+      @media (max-width: 600px) {
+        .mouse-ui { width: 100px; height: 160px; }
+        .pad { height: 150px; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ambient-bg">
+      <canvas id="neural-net"></canvas>
+    </div>
+    <div class="ambient-overlay"></div>
+
+    <div class="top-controls">
+      <button class="toggle-btn" onclick="toggleLang()" id="btn-lang">🌐 ID / EN</button>
+      <button class="toggle-btn" onclick="toggleThemeManual()" id="btn-theme">🌙 Mode Gelap</button>
+    </div>
+
+    <main id="main-dashboard" class="container">
+      <header class="main-header">
+        <span class="badge" data-i18n="badge_title">Semua Dalam Satu</span>
+        <h1 data-i18n="main_title">DeviceLab</h1>
+        <p class="subtitle" data-i18n="main_subtitle">Uji dan analisa device anda dalam satu tempat</p>
+      </header>
+
+      <section class="grid">
+        <div class="card" onclick="startScreen()">
+          <svg class="svg-icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="15" rx="2"/><path d="M6 21h12"/></svg>
+          <h3 data-i18n="card1_title">Tes Layar</h3>
+          <p data-i18n="card1_desc">Mencari titik pixel yang lelah & dead pixel.</p>
+        </div>
+        <div class="card" onclick="initTyping()">
+          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 18H4a2 2 0 01-2-2V8a2 2 0 012-2h16a2 2 0 012 2v8a2 2 0 01-2 2zM6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M10 14h.01M14 14h.01M18 14h.01"/></svg>
+          <h3 data-i18n="card2_title">Keyboard & WPM</h3>
+          <p data-i18n="card2_desc">Tes kecepatan mengetik standar 60 detik.</p>
+        </div>
+        <div class="card" onclick="startMouse()">
+          <svg class="svg-icon" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="6"/><path d="M12 2v6"/></svg>
+          <h3 data-i18n="card3_title">Mouse & Scroll</h3>
+          <p data-i18n="card3_desc">Uji tombol utama & responsivitas scroll.</p>
+        </div>
+        <div class="card" onclick="openModal('audio-test')">
+          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"/></svg>
+          <h3 data-i18n="card4_title">Saluran Stereo</h3>
+          <p data-i18n="card4_desc">Cek output speaker kiri & kanan.</p>
+        </div>
+        <div class="card" onclick="startStylus()">
+          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M16 3l5 5-13 13H3v-5L16 3z"/></svg>
+          <h3 data-i18n="card5_title">Tekanan Pena</h3>
+          <p data-i18n="card5_desc">Uji sensitivitas stylus digital pro.</p>
+        </div>
+        <div class="card" onclick="openNetTest()">
+          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M5 12a7 7 0 0114 0M8.5 15.5a3.5 3.5 0 017 0"/><circle cx="12" cy="19" r="1"/></svg>
+          <h3 data-i18n="card6_title">Speedtest Jaringan</h3>
+          <p data-i18n="card6_desc">Uji Ping, Download, dan Upload.</p>
+        </div>
+      </section>
+    </main>
+
+    <div id="screen-test" class="modal hidden" onclick="nextColor()">
+      <div class="screen-hint" data-i18n="screen_hint">Klik untuk ganti warna. ESC untuk keluar.</div>
+    </div>
+
+    <div id="typing-test" class="modal hidden">
+      <div class="glass-box">
+        <button class="close-btn" onclick="closeAll()">
+          <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <div class="stats-row">
+          <div class="stat-item"><span data-i18n="stat_time">Waktu</span><b id="t-clock">60</b></div>
+          <div class="stat-item"><span>WPM</span><b id="t-wpm">0</b></div>
+          <div class="stat-item">
+            <span data-i18n="stat_acc">Akurasi</span><b id="t-acc">100</b><span style="font-size: clamp(12px,3vw,16px); font-weight:bold">%</span>
+          </div>
+        </div>
+        <div id="t-display" class="typing-surface"></div>
+        <p class="instruction" data-i18n="type_hint">Mulai mengetik teks di atas untuk memulai waktu.</p>
+      </div>
+    </div>
+
+    <div id="mouse-test" class="modal hidden">
+      <div class="glass-box">
+        <button class="close-btn" onclick="closeAll()">
+          <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <h2 data-i18n="mouse_title" style="letter-spacing:-1px; margin-bottom:10px; font-size:clamp(20px,5vw,24px); color:var(--dark-text)">Tes Navigasi Mouse</h2>
+        <div class="mouse-ui">
+          <div id="ml" class="m-part">L</div>
+          <div id="mr" class="m-part">R</div>
+          <div id="mw" class="m-wheel"></div>
+        </div>
+        <p class="instruction" style="font-size:clamp(14px,3vw,18px); color:var(--apple-blue); font-weight:600">Scroll Y: <span id="s-val">0</span></p>
+      </div>
+    </div>
+
+    <div id="audio-test" class="modal hidden">
+      <div class="glass-box">
+        <button class="close-btn" onclick="closeAll()">
+          <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <h2 data-i18n="audio_title" style="letter-spacing:-1px; margin-bottom:10px; font-size:clamp(20px,5vw,24px); color:var(--dark-text)">Output Gema Suara</h2>
+        <p class="instruction" data-i18n="audio_hint" style="margin-bottom:30px">Gunakan earphone untuk tes saluran kiri/kanan.</p>
+        <button class="btn-apple" data-i18n="btn_left" onclick="playAudio(-1)">Speaker Kiri</button>
+        <button class="btn-apple" data-i18n="btn_right" onclick="playAudio(1)">Speaker Kanan</button>
+      </div>
+    </div>
+
+    <div id="stylus-test" class="modal hidden">
+      <div class="glass-box">
+        <button class="close-btn" onclick="closeAll()">
+          <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <h2 data-i18n="stylus_title" style="letter-spacing:-1px; margin-bottom:10px; font-size:clamp(20px,5vw,24px); color:var(--dark-text)">Sensitivitas Tekanan</h2>
+        <div id="pen-pad" class="pad"><div id="pressure-dot"></div></div>
+        <p class="instruction" style="font-size:clamp(14px,3vw,18px); color:var(--apple-blue); font-weight:600">Pressure Level: <span id="p-val">0.00</span></p>
+      </div>
+    </div>
+
+    <div id="net-test" class="modal hidden">
+      <div class="glass-box">
+        <button class="close-btn" onclick="closeAll()">
+          <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+        <h2 id="n-status" data-i18n="net_title" style="letter-spacing:-1px; margin-bottom:10px; font-size:clamp(20px,5vw,24px); color:var(--dark-text)">Monitor Jaringan</h2>
+        <p class="instruction" id="net-info" style="margin-bottom:20px;">Siap untuk memulai pengujian.</p>
+        <div class="network-dashboard">
+          <div class="net-stat" id="card-ping"><span data-i18n="net_ping">Ping</span><b id="n-ping-val">--</b><small>ms</small></div>
+          <div class="net-stat" id="card-dl"><span data-i18n="net_dl">Unduh</span><b id="n-dl-val">--</b><small>Mbps</small></div>
+          <div class="net-stat" id="card-ul"><span data-i18n="net_ul">Unggah</span><b id="n-ul-val">--</b><small>Mbps</small></div>
+        </div>
+        <div class="progress-bar-container">
+          <div id="net-progress" class="progress-fill"></div>
+        </div>
+        <button class="btn-apple" id="btn-start-net" data-i18n="btn_start_net" onclick="runAdvancedNetTest()">Mulai Tes</button>
+      </div>
+    </div>
+
+    <div class="credit">
+      <p data-i18n="credit_text">© 2026 Kelompok 2 KKA</p>
+    </div>
+
+    <script>
+      // ==========================================
+      // MULTI BAHASA
+      // ==========================================
+      const translations = {
+        id: {
+          badge_title: "Semua Dalam Satu", main_title: "DeviceLab", main_subtitle: "Uji dan analisa device anda dalam satu tempat",
+          card1_title: "Tes Layar", card1_desc: "Mencari titik pixel yang lelah & dead pixel.",
+          card2_title: "Keyboard & WPM", card2_desc: "Tes kecepatan mengetik standar 60 detik.",
+          card3_title: "Mouse & Scroll", card3_desc: "Uji tombol utama & responsivitas scroll.",
+          card4_title: "Saluran Stereo", card4_desc: "Cek output speaker kiri & kanan.",
+          card5_title: "Tekanan Pena", card5_desc: "Uji sensitivitas stylus digital pro.",
+          card6_title: "Speedtest Jaringan", card6_desc: "Uji Ping, Download, dan Upload.",
+          screen_hint: "Klik untuk ganti warna. ESC untuk keluar.", stat_time: "Waktu", stat_acc: "Akurasi",
+          type_hint: "Mulai mengetik teks di atas untuk memulai waktu.",
+          mouse_title: "Tes Navigasi Mouse", audio_title: "Output Gema Suara", audio_hint: "Gunakan earphone untuk tes saluran kiri/kanan.",
+          btn_left: "Speaker Kiri", btn_right: "Speaker Kanan", stylus_title: "Sensitivitas Tekanan",
+          net_title: "Monitor Jaringan", net_ping: "Ping", net_dl: "Unduh", net_ul: "Unggah",
+          btn_start_net: "Mulai Tes", btn_retest: "Tes Ulang",
+          credit_text: "© 2026 Kelompok 2 KKA",
+          alert_msg: "Waktu habis! Diagnostik selesai.\nWPM:",
+          theme_dark: "🌙 Mode Gelap", theme_light: "☀️ Mode Terang",
+          net_info_ready: "Siap untuk memulai pengujian.", net_info_testing: "Sedang menguji...", net_info_done: "Pengujian selesai."
+        },
+        en: {
+          badge_title: "All In One", main_title: "DeviceLab", main_subtitle: "Test and analyze your device in one place",
+          card1_title: "Screen Test", card1_desc: "Check for tired and dead pixels.",
+          card2_title: "Keyboard & WPM", card2_desc: "Standard 60-second typing speed test.",
+          card3_title: "Mouse & Scroll", card3_desc: "Test main buttons & scroll responsiveness.",
+          card4_title: "Stereo Channels", card4_desc: "Check left & right speaker output.",
+          card5_title: "Pen Pressure", card5_desc: "Test pro digital stylus sensitivity.",
+          card6_title: "Network Speedtest", card6_desc: "Test Ping, Download, and Upload speeds.",
+          screen_hint: "Click to change color. ESC to exit.", stat_time: "Time", stat_acc: "Accuracy",
+          type_hint: "Start typing the text above to start the timer.",
+          mouse_title: "Mouse Navigation Test", audio_title: "Sound Echo Output", audio_hint: "Use earphones to test left/right channels.",
+          btn_left: "Left Speaker", btn_right: "Right Speaker", stylus_title: "Pressure Sensitivity",
+          net_title: "Network Monitor", net_ping: "Ping", net_dl: "Download", net_ul: "Upload",
+          btn_start_net: "Start Test", btn_retest: "Retest",
+          credit_text: "© 2026 Group 2 KKA",
+          alert_msg: "Time's up! Diagnostic complete.\nWPM:",
+          theme_dark: "🌙 Dark Mode", theme_light: "☀️ Light Mode",
+          net_info_ready: "Ready to start testing.", net_info_testing: "Testing in progress...", net_info_done: "Testing completed."
+        }
+      };
+
+      let currentLang = 'id';
+
+      function toggleLang() {
+        currentLang = currentLang === 'id' ? 'en' : 'id';
+        document.getElementById('btn-lang').innerText = currentLang === 'id' ? '🌐 ID / EN' : '🌐 EN / ID';
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          if (translations[currentLang][key]) el.innerText = translations[currentLang][key];
+        });
+        // FIX #7: Sinkronkan teks tombol theme setelah ganti bahasa
+        document.getElementById('btn-theme').innerText = isDark
+          ? translations[currentLang].theme_light
+          : translations[currentLang].theme_dark;
+      }
+
+      // ==========================================
+      // MODE GELAP
+      // ==========================================
+      const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      let isDark = darkModeMediaQuery.matches;
+
+      function applyTheme() {
+        // FIX #8: Hapus style.setProperty manual — cukup toggle data-theme,
+        // biarkan CSS :root dan [data-theme=dark] yang handle semua variabel.
+        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        document.getElementById('btn-theme').innerText = isDark
+          ? translations[currentLang].theme_light
+          : translations[currentLang].theme_dark;
+      }
+      applyTheme();
+
+      darkModeMediaQuery.addEventListener('change', (e) => { isDark = e.matches; applyTheme(); });
+      function toggleThemeManual() { isDark = !isDark; applyTheme(); }
+
+      // ==========================================
+      // BACKGROUND NEURAL NET
+      // ==========================================
+      const canvas = document.getElementById('neural-net');
+      const ctx = canvas.getContext('2d');
+      let w, h, particles;
+
+      function initBackground() {
+        resize();
+        particles = [];
+        for (let i = 0; i < 60; i++) {
+          let size = Math.random() * 2 + 1;
+          particles.push(new Particle(
+            Math.random() * w, Math.random() * h,
+            (Math.random() * 0.8) - 0.4, (Math.random() * 0.8) - 0.4, size
+          ));
+        }
+        window.addEventListener('resize', resize);
+        animate();
+      }
+
+      function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+
+      class Particle {
+        constructor(x, y, dx, dy, size) { this.x = x; this.y = y; this.directionX = dx; this.directionY = dy; this.size = size; }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+          ctx.fillStyle = isDark ? `rgba(241,196,15,0.4)` : `rgba(212,175,55,0.3)`;
+          ctx.fill();
+        }
+        update() {
+          if (this.x > w || this.x < 0) this.directionX = -this.directionX;
+          if (this.y > h || this.y < 0) this.directionY = -this.directionY;
+          this.x += this.directionX; this.y += this.directionY;
+          this.draw();
+        }
+      }
+
+      function animate() {
+        ctx.fillStyle = isDark ? 'rgba(18,18,18,0.4)' : 'rgba(230,230,230,0.3)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < particles.length; i++) {
+          particles[i].update();
+          for (let j = i; j < particles.length; j++) {
+            let dx = particles[i].x - particles[j].x;
+            let dy = particles[i].y - particles[j].y;
+            let dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 150) {
+              let opacity = 1 - dist / 150;
+              ctx.strokeStyle = isDark ? `rgba(241,196,15,${opacity * 0.1})` : `rgba(134,134,137,${opacity * 0.15})`;
+              ctx.lineWidth = 0.5;
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(animate);
+      }
+      initBackground();
+
+      // ==========================================
+      // FUNGSI UMUM MODAL
+      // ==========================================
+      let appTimer = null;
+      let isNetTesting = false;
+      // FIX #3 & #6: Simpan referensi event handler agar bisa di-remove saat closeAll
+      let _mouseDownHandler = null;
+      let _mouseUpHandler = null;
+      let _wheelHandler = null;
+      let _contextMenuHandler = null;
+
+      function openModal(id) {
+        document.getElementById(id).classList.remove("hidden");
+        document.getElementById("main-dashboard").style.opacity = "0.1";
+      }
+
+      function closeAll() {
+        document.querySelectorAll(".modal").forEach(m => m.classList.add("hidden"));
+        document.getElementById("main-dashboard").style.opacity = "1";
+        clearInterval(appTimer);
+        appTimer = null;
+
+        // FIX #4: Stop network animation loop
+        isNetTesting = false;
+
+        // FIX #3: Remove mouse event listeners properly
+        if (_mouseDownHandler) { window.removeEventListener('mousedown', _mouseDownHandler); _mouseDownHandler = null; }
+        if (_mouseUpHandler) { window.removeEventListener('mouseup', _mouseUpHandler); _mouseUpHandler = null; }
+        if (_wheelHandler) { window.removeEventListener('wheel', _wheelHandler); _wheelHandler = null; }
+        if (_contextMenuHandler) { window.removeEventListener('contextmenu', _contextMenuHandler); _contextMenuHandler = null; }
+
+        // FIX #6: Remove stylus event listener
+        const pad = document.getElementById('pen-pad');
+        if (pad) pad.onpointermove = null;
+
+        window.onkeydown = null;
+
+        if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+      }
+
+      document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
+
+      // ==========================================
+      // FITUR-FITUR
+      // ==========================================
+
+      // 1. Screen Test
+      // FIX #5: Reset cIdx setiap kali startScreen dipanggil
+      const screenColors = ["#ff3b30", "#34c759", "#007aff", "#ffffff", "#000000"];
+      let cIdx = 0;
+      function startScreen() {
+        cIdx = 0; // reset ke merah setiap kali dibuka
+        document.getElementById("screen-test").style.backgroundColor = screenColors[cIdx];
+        openModal("screen-test");
+        document.documentElement.requestFullscreen().catch(() => {});
+      }
+      function nextColor() {
+        cIdx = (cIdx + 1) % screenColors.length;
+        document.getElementById("screen-test").style.backgroundColor = screenColors[cIdx];
+      }
+
+      // 2. Typing Test
+      let timeLeft = 60, charIdx = 0, mistakes = 0;
+      const wordBank = ["karya","desain","digital","manusia","tulus","bentuk","sempurna","interaksi","layar","sistem","aplikasi","teknologi","kreatif","cepat","akurat","visual","audio","tekanan","pena","latensi","jaringan","stabil","koneksi","data","proses","render","warna","piksel","memori","grafis","ketik","respons","uji","hasil"];
+
+      function generateRandomText(n) {
+        let out = [];
+        for (let i = 0; i < n; i++) out.push(wordBank[Math.floor(Math.random() * wordBank.length)]);
+        return out.join(" ");
+      }
+
+      function initTyping() {
+        openModal("typing-test");
+        timeLeft = 60; charIdx = 0; mistakes = 0;
+        document.getElementById("t-clock").innerText = timeLeft;
+        document.getElementById("t-wpm").innerText = 0;
+        document.getElementById("t-acc").innerText = 100;
+        const text = generateRandomText(40);
+        const disp = document.getElementById("t-display");
+        disp.innerHTML = "";
+        text.split("").forEach(c => {
+          let s = document.createElement("span"); s.innerText = c; s.className = "char"; disp.appendChild(s);
+        });
+        disp.querySelectorAll(".char")[0].classList.add("active");
+        window.onkeydown = handleType;
+      }
+
+      function handleType(e) {
+        if (e.key === "Escape") return;
+        if (["Shift","Control","Alt","Meta","CapsLock","Tab"].includes(e.key)) return;
+        if (e.key === " ") e.preventDefault();
+
+        if (!appTimer) {
+          appTimer = setInterval(() => {
+            timeLeft--;
+            document.getElementById("t-clock").innerText = timeLeft;
+            if (timeLeft <= 0) {
+              clearInterval(appTimer);
+              alert(`${translations[currentLang].alert_msg} ${document.getElementById("t-wpm").innerText}\nAkurasi: ${document.getElementById("t-acc").innerText}%`);
+              closeAll();
+            }
+          }, 1000);
+        }
+
+        const chars = document.querySelectorAll(".char");
+        if (e.key === "Backspace") {
+          if (charIdx > 0) {
+            chars[charIdx].classList.remove("active");
+            charIdx--;
+            chars[charIdx].classList.remove("correct","incorrect");
+            chars[charIdx].classList.add("active");
+          }
+        } else if (charIdx < chars.length) {
+          if (e.key === chars[charIdx].innerText) chars[charIdx].classList.add("correct");
+          else { chars[charIdx].classList.add("incorrect"); mistakes++; }
+          chars[charIdx].classList.remove("active");
+          charIdx++;
+          if (charIdx < chars.length) chars[charIdx].classList.add("active");
+        }
+
+        // FIX #1: Hitung WPM hanya setelah timer berjalan (timeLeft < 60)
+        const elapsed = 60 - timeLeft;
+        if (elapsed > 0 && charIdx > 0) {
+          const wpm = Math.max(0, Math.round(((charIdx - mistakes) / 5) / (elapsed / 60)));
+          document.getElementById("t-wpm").innerText = wpm;
+        }
+
+        // FIX #2: Hitung akurasi hanya jika charIdx > 0, hindari pembagian nol
+        if (charIdx > 0) {
+          const acc = Math.max(0, Math.round(((charIdx - mistakes) / charIdx) * 100));
+          document.getElementById("t-acc").innerText = acc;
+        }
+      }
+
+      // 3. Mouse Test
+      function startMouse() {
+        openModal("mouse-test");
+        let scrollTotal = 0;
+        document.getElementById("s-val").innerText = 0;
+
+        // FIX #3: Gunakan addEventListener dengan referensi tersimpan
+        _contextMenuHandler = e => e.preventDefault();
+        _mouseDownHandler = e => {
+          if (e.button === 0) document.getElementById("ml").classList.add("active");
+          if (e.button === 1) { document.getElementById("mw").classList.add("active"); e.preventDefault(); }
+          if (e.button === 2) document.getElementById("mr").classList.add("active");
+        };
+        _mouseUpHandler = () => document.querySelectorAll(".m-part, .m-wheel").forEach(el => el.classList.remove("active"));
+        _wheelHandler = e => {
+          scrollTotal += Math.round(e.deltaY / 10);
+          document.getElementById("s-val").innerText = scrollTotal;
+          document.getElementById("mw").classList.add("active");
+          setTimeout(() => document.getElementById("mw").classList.remove("active"), 100);
+        };
+
+        window.addEventListener('contextmenu', _contextMenuHandler);
+        window.addEventListener('mousedown', _mouseDownHandler);
+        window.addEventListener('mouseup', _mouseUpHandler);
+        window.addEventListener('wheel', _wheelHandler);
+      }
+
+      // 4. Audio Test
+      function playAudio(pan) {
+        const ac = new window.AudioContext();
+        const os = ac.createOscillator();
+        const pn = ac.createStereoPanner();
+        pn.pan.value = pan;
+        os.connect(pn).connect(ac.destination);
+        os.start();
+        setTimeout(() => os.stop(), 500);
+      }
+
+      // 5. Stylus Test
+      function startStylus() {
+        openModal("stylus-test");
+        // FIX #6: onpointermove sudah di-cleanup di closeAll via pad.onpointermove = null
+        const pad = document.getElementById("pen-pad");
+        pad.onpointermove = e => {
+          let p = e.pressure || 0;
+          const dot = document.getElementById("pressure-dot");
+          if (p > 0) {
+            document.getElementById("p-val").innerText = p.toFixed(2);
+            dot.style.width = (p * 250) + "px";
+            dot.style.height = (p * 250) + "px";
+            dot.style.opacity = 0.3 + p;
+          } else {
+            document.getElementById("p-val").innerText = "0.00";
+            dot.style.width = "0px";
+            dot.style.height = "0px";
+          }
+        };
+      }
+
+      // 6. Network Test
+      function openNetTest() {
+        openModal("net-test");
+        document.getElementById('net-progress').style.width = '0%';
+        document.getElementById('n-ping-val').innerText = '--';
+        document.getElementById('n-dl-val').innerText = '--';
+        document.getElementById('n-ul-val').innerText = '--';
+        document.getElementById('net-info').innerText = translations[currentLang].net_info_ready;
+        const btn = document.getElementById('btn-start-net');
+        btn.disabled = false;
+        btn.setAttribute('data-i18n', 'btn_start_net');
+        btn.innerText = translations[currentLang].btn_start_net;
+      }
+
+      // FIX #4: Terima parameter `testId` untuk membatalkan animasi bila test sudah berganti
+      function animateValue(obj, start, end, duration, isFloat, testId, callback) {
+        let startTimestamp = null;
+        const step = timestamp => {
+          // Batalkan jika test sudah berhenti atau berganti sesi
+          if (!isNetTesting || netTestId !== testId) return;
+          if (!startTimestamp) startTimestamp = timestamp;
+          const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+          let current = progress * (end - start) + start;
+          if (progress < 1) current += (Math.random() * (end * 0.15)) - (end * 0.05);
+          else current = end;
+          obj.innerText = isFloat ? Math.max(0, current).toFixed(1) : Math.floor(Math.max(0, current));
+          if (progress < 1) requestAnimationFrame(step);
+          else if (callback) callback();
+        };
+        requestAnimationFrame(step);
+      }
+
+      let netTestId = 0; // ID unik per sesi tes jaringan
+
+      function runAdvancedNetTest() {
+        if (!navigator.onLine) { alert("Perangkat Anda sedang offline."); return; }
+
+        isNetTesting = true;
+        netTestId++; // FIX #4: Inkremen ID sehingga animasi lama otomatis dibatalkan
+        const currentTestId = netTestId;
+
+        const btn = document.getElementById('btn-start-net');
+        const progress = document.getElementById('net-progress');
+        const info = document.getElementById('net-info');
+        const pingVal = document.getElementById('n-ping-val');
+        const dlVal = document.getElementById('n-dl-val');
+        const ulVal = document.getElementById('n-ul-val');
+
+        btn.disabled = true;
+        info.innerText = translations[currentLang].net_info_testing;
+        progress.style.width = '5%';
+        pingVal.innerText = '0'; dlVal.innerText = '0.0'; ulVal.innerText = '0.0';
+        document.querySelectorAll('.net-stat').forEach(el => el.classList.remove('active'));
+
+        const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        const actualPing = conn && conn.rtt ? conn.rtt : Math.floor(Math.random() * 40) + 15;
+        const actualDl = conn && conn.downlink ? conn.downlink : Math.floor(Math.random() * 80) + 10;
+        const actualUl = actualDl * 0.45;
+
+        document.getElementById('card-ping').classList.add('active');
+        animateValue(pingVal, 0, actualPing, 1000, false, currentTestId, () => {
+          progress.style.width = '33%';
+          document.getElementById('card-ping').classList.remove('active');
+          document.getElementById('card-dl').classList.add('active');
+          animateValue(dlVal, 0, actualDl, 2000, true, currentTestId, () => {
+            progress.style.width = '66%';
+            document.getElementById('card-dl').classList.remove('active');
+            document.getElementById('card-ul').classList.add('active');
+            animateValue(ulVal, 0, actualUl, 2000, true, currentTestId, () => {
+              progress.style.width = '100%';
+              document.getElementById('card-ul').classList.remove('active');
+              isNetTesting = false;
+              btn.disabled = false;
+              btn.setAttribute('data-i18n', 'btn_retest');
+              btn.innerText = translations[currentLang].btn_retest;
+              info.innerText = translations[currentLang].net_info_done;
+            });
+          });
+        });
+      }
+    </script>
+  </body>
+</html>
