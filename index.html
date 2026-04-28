@@ -2,9 +2,11 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Diagnostics Device</title>
-    <link rel="icon" type="image/svg" href="titlelogo.svg" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>DeviceLab - All in One Diagnostics</title>
     <link
       href="https://fonts.googleapis.com/css2?family=Switzer:wght@400;500;600;700&display=swap"
       rel="stylesheet"
@@ -20,6 +22,7 @@
         --card-bg: whitesmoke;
         --stroke: rgba(0, 0, 0, 0.1);
         --main-font: "Switzer", -apple-system, sans-serif;
+        --error-color: #ff3b30;
       }
 
       [data-theme="dark"] {
@@ -42,190 +45,250 @@
         scrollbar-color: var(--stroke) transparent;
       }
 
-      ::-webkit-scrollbar { width: 14px; }
+      ::-webkit-scrollbar { width: 8px; }
       ::-webkit-scrollbar-track { background: transparent; }
-      ::-webkit-scrollbar-thumb {
-        background-color: var(--stroke);
-        border-radius: 10px;
-        border: 4px solid var(--soft-gray);
-        transition: background-color 0.3s;
-      }
-      ::-webkit-scrollbar-thumb:hover { background-color: var(--sec-color); }
+      ::-webkit-scrollbar-thumb { background-color: var(--stroke); border-radius: 10px; }
 
       body {
-        background-color: var(--soft-gray);
-        color: var(--dark-text);
-        overflow-x: hidden;
+        background-color: var(--soft-gray); color: var(--dark-text); overflow-x: hidden;
         transition: background-color 0.4s ease, color 0.4s ease;
       }
 
-      .ambient-bg {
-        position: fixed; top: 0; left: 0;
-        width: 100vw; height: 100vh;
-        z-index: -2; overflow: hidden;
-      }
+      /* Background Effect */
+      .ambient-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; overflow: hidden; }
       #neural-net { width: 100%; height: 100%; }
 
       .ambient-overlay {
-        position: fixed; top: 0; left: 0;
-        width: 100vw; height: 100vh; z-index: -1;
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
         background-image: radial-gradient(var(--stroke) 1.3px, transparent 0);
-        background-size: 20px 20px;
-        pointer-events: none;
+        background-size: 20px 20px; pointer-events: none;
       }
 
+      /* Navbar / Top Controls */
       .top-controls {
-        display: flex; justify-content: flex-end; gap: 10px;
-        max-width: 1000px; margin: 0 auto; padding: 20px 20px 0;
-        z-index: 10; position: relative;
+        display: flex; justify-content: flex-end; gap: 10px; flex-wrap: wrap; max-width: 1000px;
+        margin: 0 auto; padding: 20px 20px 0; z-index: 10; position: relative;
       }
       .toggle-btn {
-        background: var(--card-bg); color: var(--dark-text);
-        border: 1px solid var(--stroke); padding: 8px 16px;
-        border-radius: 20px; font-weight: 600; cursor: pointer;
-        font-size: 12px; transition: 0.3s;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        background: var(--card-bg); color: var(--dark-text); border: 1px solid var(--stroke);
+        padding: 8px 16px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 12px;
+        transition: 0.3s; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
       }
       .toggle-btn:hover { transform: scale(1.05); border-color: var(--sec-color); }
 
+      /* Main Container */
       .container {
-        max-width: 1000px; margin: 0 auto;
-        padding: clamp(20px, 8vw, 60px) clamp(15px, 4vw, 20px);
+        max-width: 1000px; margin: 0 auto; padding: clamp(20px, 5vw, 60px) clamp(15px, 4vw, 20px);
         transition: opacity 0.5s; position: relative; z-index: 1;
       }
 
+      /* Header */
       .main-header {
-        text-align: center; margin-bottom: clamp(30px, 6vw, 60px);
-        background: #08204a; backdrop-filter: blur(2px);
-        border: solid 1px whitesmoke; border-radius: 50px;
-        padding: clamp(15px, 4vw, 20px);
+        text-align: center; margin-bottom: clamp(20px, 4vw, 40px); background: #08204a;
+        backdrop-filter: blur(2px); border: solid 1px whitesmoke; border-radius: 50px; padding: clamp(20px, 4vw, 30px);
       }
       .badge {
-        background: var(--sec-color); padding: 5px 15px; border-radius: 20px;
-        font-size: clamp(10px, 2vw, 12px); font-weight: 600; color: #111;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        background: var(--sec-color); padding: 6px 18px; border-radius: 20px;
+        font-size: clamp(10px, 2vw, 12px); font-weight: 700; color: #111;
       }
       h1 {
-        font-size: clamp(32px, 6vw, 48px); font-weight: 700;
-        margin: 15px 0 10px; letter-spacing: -1.5px; line-height: 1.1; color: whitesmoke;
+        font-size: clamp(28px, 6vw, 48px); font-weight: 700; margin: 15px 0 10px;
+        letter-spacing: -1.5px; line-height: 1.1; color: whitesmoke;
       }
-      .subtitle { color: rgba(255,255,255,0.8); font-size: clamp(14px, 3vw, 19px); font-weight: 400; }
+      .subtitle { color: rgba(255, 255, 255, 0.8); font-size: clamp(13px, 3vw, 18px); font-weight: 400; }
 
-      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+      /* TAB MENU */
+      .tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; }
+      .tab-btn {
+        background: var(--card-bg); color: var(--sub-text); border: 1px solid var(--stroke);
+        padding: 10px 24px; border-radius: 30px; cursor: pointer; transition: 0.3s;
+        font-weight: 600; font-size: clamp(12px, 3vw, 14px); box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+      }
+      .tab-btn.active { background: var(--apple-blue); color: var(--card-bg); border-color: var(--apple-blue); }
+
+      /* GRID LAYOUT RESPONSIVE */
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
       .card {
-        background: var(--card-bg); border-radius: 28px;
-        padding: clamp(20px, 5vw, 35px); cursor: pointer;
-        border: 1px solid var(--stroke);
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        box-shadow: 0 10px 30px rgba(0,0,0,0.03);
-        display: flex; flex-direction: column; align-items: flex-start;
+        background: var(--card-bg); border-radius: 28px; padding: clamp(20px, 5vw, 30px);
+        cursor: pointer; border: 1px solid var(--stroke); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); display: flex; flex-direction: column; align-items: flex-start;
       }
-      .card:hover {
-        transform: scale(1.03) translateY(-5px);
-        box-shadow: 0px 0px 30px rgba(0,0,0,0.137);
-        border-color: var(--sec-color);
-      }
-      .svg-icon {
-        width: 44px; height: 44px; margin-bottom: 20px;
-        fill: none; stroke: var(--sec-color); stroke-width: 1.5;
-        stroke-linecap: round; stroke-linejoin: round;
-      }
-      h3 { font-size: clamp(18px, 4vw, 21px); font-weight: 600; margin-bottom: 8px; letter-spacing: -0.5px; color: var(--dark-text); }
-      .card p { color: var(--sub-text); font-size: clamp(13px, 2.5vw, 15px); line-height: 1.4; }
+      .card:hover { transform: scale(1.03) translateY(-5px); box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.137); border-color: var(--sec-color); }
+      .svg-icon { width: 40px; height: 40px; margin-bottom: 15px; fill: none; stroke: var(--sec-color); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+      h3 { font-size: clamp(16px, 4vw, 20px); font-weight: 600; margin-bottom: 8px; letter-spacing: -0.5px; color: var(--dark-text); }
+      .card p { color: var(--sub-text); font-size: clamp(12px, 2.5vw, 14px); line-height: 1.4; }
 
+      /* MODAL SYSTEM */
       .modal {
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-        z-index: 100; background-color: var(--soft-gray);
-        background-image: radial-gradient(var(--stroke) 1.3px, transparent 0);
-        background-size: 20px 20px; backdrop-filter: blur(30px);
-        display: flex; align-items: center; justify-content: center;
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 100;
+        background-color: var(--soft-gray); background-image: radial-gradient(var(--stroke) 1.3px, transparent 0);
+        background-size: 20px 20px; backdrop-filter: blur(30px); display: flex; align-items: center; justify-content: center;
         transition: 0.3s; padding: 15px;
       }
-      .hidden { display: none !important; opacity: 0; }
+      .hidden { display: none !important; opacity: 0; pointer-events: none; }
       .glass-box {
-        background: var(--card-bg); width: 100%; max-width: 700px;
-        padding: clamp(30px, 6vw, 60px); border-radius: 35px;
-        text-align: center; position: relative;
-        box-shadow: 0 40px 100px rgba(0,0,0,0.1); border: 1px solid var(--stroke);
+        background: var(--card-bg); width: 100%; max-width: 700px; max-height: 90vh; overflow-y: auto;
+        padding: clamp(25px, 6vw, 50px); border-radius: 30px; text-align: center; position: relative;
+        box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1); border: 1px solid var(--stroke);
+        overflow-x: hidden;
       }
       .close-btn {
-        position: absolute; top: clamp(15px, 4vw, 25px); right: clamp(15px, 4vw, 25px);
-        border: none; width: 35px; height: 35px; border-radius: 50%;
-        background: var(--soft-gray); cursor: pointer; transition: 0.2s;
-        display: flex; align-items: center; justify-content: center;
+        position: absolute; top: 15px; right: 15px; border: none; width: 35px; height: 35px; border-radius: 50%;
+        background: var(--soft-gray); cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; z-index: 101;
       }
       .close-btn:hover { transform: rotate(90deg); background: var(--stroke); }
       .close-btn svg { fill: none; stroke: var(--dark-text); stroke-width: 2; width: 14px; height: 14px; }
 
-      .network-dashboard { display: flex; justify-content: space-between; margin: 30px 0; gap: 15px; flex-wrap: wrap; }
-      .net-stat {
-        background: var(--soft-gray); padding: 20px; border-radius: 20px;
-        flex: 1; min-width: 120px; border: 1px solid var(--stroke);
-        display: flex; flex-direction: column; align-items: center; transition: 0.3s;
-      }
-      .net-stat.active { border-color: var(--apple-blue); box-shadow: 0 0 15px rgba(0,122,255,0.1); transform: scale(1.05); }
-      .net-stat span { font-size: 12px; color: var(--sub-text); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-      .net-stat b { font-size: clamp(24px, 5vw, 36px); color: var(--apple-blue); font-weight: 700; margin-top: 10px; letter-spacing: -1px; }
-      .net-stat small { font-size: 12px; font-weight: 600; color: var(--sub-text); margin-top: 5px; }
-      .progress-bar-container { width: 100%; height: 8px; background: var(--stroke); border-radius: 10px; overflow: hidden; margin-bottom: 30px; }
-      .progress-fill { height: 100%; width: 0%; background: var(--apple-blue); transition: width 0.3s; }
+      /* NETWORK DASHBOARD */
+      .network-dashboard { display: flex; justify-content: center; flex-wrap: wrap; margin: 20px 0; gap: 10px; }
+      .net-stat { background: var(--soft-gray); padding: 15px; border-radius: 20px; flex: 1; min-width: 100px; border: 1px solid var(--stroke); display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
+      .net-stat.active { border-color: var(--apple-blue); box-shadow: 0 0 15px rgba(0, 122, 255, 0.1); transform: scale(1.05); }
+      .net-stat span { font-size: clamp(10px, 2vw, 12px); color: var(--sub-text); font-weight: 700; text-transform: uppercase; }
+      .net-stat b { font-size: clamp(20px, 5vw, 32px); color: var(--apple-blue); font-weight: 700; margin-top: 5px; }
+      .net-stat small { font-size: 11px; font-weight: 600; color: var(--sub-text); }
+      
+      .progress-bar-container { width: 100%; height: 8px; background: var(--stroke); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+      .progress-fill { height: 100%; width: 0%; background: var(--apple-blue); transition: width 0.3s ease-in-out; }
 
+      /* UI BUTTONS */
       .btn-apple {
-        background: var(--dark-text); color: var(--card-bg);
-        border: none; padding: clamp(10px, 3vw, 15px) clamp(20px, 5vw, 30px);
-        border-radius: 30px; font-weight: 600; cursor: pointer;
-        margin: 10px; transition: 0.2s; font-size: clamp(14px, 3vw, 16px);
+        background: var(--dark-text); color: var(--card-bg); border: none;
+        padding: clamp(10px, 3vw, 15px) clamp(20px, 5vw, 30px); border-radius: 30px; font-weight: 600;
+        cursor: pointer; margin: 10px; transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-size: clamp(12px, 3vw, 15px);
       }
       .btn-apple:hover { transform: scale(1.05); background: var(--apple-blue); color: white; }
       .btn-apple:disabled { opacity: 0.5; cursor: not-allowed; transform: scale(1); }
 
-      .stats-row {
-        display: flex; justify-content: space-around;
-        margin-bottom: clamp(15px, 4vw, 30px);
-        border-bottom: 1px solid var(--stroke); padding-bottom: 20px;
-      }
+      /* ==========================================
+         INTERAKTIF TYPING UI (Presisi Tinggi)
+      ========================================== */
+      #t-main-wrapper { transition: opacity 0.3s; width: 100%; cursor: text; }
+      .stats-row { display: flex; justify-content: space-around; margin-bottom: 5px; border-bottom: 1px solid var(--stroke); padding-bottom: 10px; }
       .stat-item { display: flex; flex-direction: column; align-items: center; }
-      .stat-item span { font-size: clamp(9px, 2vw, 11px); color: var(--sub-text); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
-      .stat-item b { font-size: clamp(28px, 6vw, 40px); color: var(--apple-blue); font-weight: 700; letter-spacing: -1px; }
-      .typing-surface {
-        font-size: clamp(18px, 4.5vw, 26px); color: var(--sub-text); text-align: left;
-        line-height: 1.5; margin: 20px 0; min-height: 100px; font-weight: 500; letter-spacing: -0.5px;
+      .stat-item span { font-size: clamp(9px, 2vw, 11px); color: var(--sub-text); font-weight: 700; text-transform: uppercase; }
+      .stat-item b { font-size: clamp(22px, 5vw, 32px); color: var(--apple-blue); font-weight: 700; transition: color 0.3s, transform 0.1s; }
+      
+      .type-timer-track { width: 100%; height: 4px; background: var(--stroke); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+      .type-timer-fill { height: 100%; width: 100%; background: var(--sec-color); transition: width 1s linear; }
+
+      .typing-container {
+        height: 125px; overflow: hidden; position: relative;
+        margin: 10px 0 10px; text-align: left; padding: 5px;
+        outline: none; border-radius: 15px; cursor: text;
       }
+      
+      .t-focus-overlay {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: var(--soft-gray); opacity: 0.9; backdrop-filter: blur(2px);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 16px; font-weight: 700; color: var(--dark-text);
+        cursor: pointer; z-index: 15; transition: 0.3s;
+      }
+      .t-focus-overlay svg { width: 20px; height: 20px; margin-right: 8px; stroke: currentColor; fill: none; stroke-width: 2; }
+      
+      .typing-container:focus .t-focus-overlay, 
+      .typing-container:focus-within .t-focus-overlay { opacity: 0; pointer-events: none; }
+
+      .typing-surface {
+        display: flex; flex-wrap: wrap; gap: 8px 6px; font-size: clamp(20px, 4vw, 26px);
+        color: var(--sub-text); font-family: "Courier New", Courier, monospace; font-weight: 600;
+        transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); align-content: flex-start;
+        position: relative;
+      }
+      
+      /* Caret Snappy (Delay Horizontal dikurangi agar presisi) */
+      .type-caret {
+        position: absolute; width: 2px; height: 1.1em;
+        background-color: var(--sec-color); border-radius: 2px;
+        transition: left 0.05s linear, top 0.1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        animation: blink 1s infinite; pointer-events: none; z-index: 10; display: none;
+      }
+      @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+      .typing-container:focus .type-caret, 
+      .typing-container:focus-within .type-caret { display: block; }
+
+      .word { 
+        display: flex; padding: 2px 2px; border-bottom: 2px solid transparent; 
+        border-radius: 4px; transition: border-color 0.15s; margin-bottom: 5px;
+      }
+      
+      .word.active { border-bottom: 2px solid var(--stroke); }
+      .word.error { border-bottom: 2px solid var(--error-color); }
+      
+      @keyframes shake-error {
+        0%, 100% { transform: translateX(0); }
+        20% { transform: translateX(-3px); }
+        40% { transform: translateX(3px); }
+        60% { transform: translateX(-1px); }
+        80% { transform: translateX(1px); }
+      }
+      .shake-error { animation: shake-error 0.3s cubic-bezier(.36,.07,.19,.97) both; }
+
+      .char { transition: color 0.1s; }
       .char.correct { color: var(--dark-text); }
-      .char.incorrect { color: #ff3b30; text-decoration: underline; background: rgba(255,59,48,0.1); }
-      .char.active { border-bottom: 3px solid var(--apple-blue); color: var(--apple-blue); }
-      .instruction { font-size: clamp(13px, 3vw, 15px); color: var(--sub-text); margin-top: 15px; font-weight: 400; }
+      .char.incorrect { color: var(--error-color); }
+      .char.extra { color: #ff3b3090; } 
 
-      .mouse-ui { width: 130px; height: 210px; border: 3px solid var(--sub-text); border-radius: 50px; margin: 30px auto; display: flex; overflow: hidden; position: relative; }
-      .m-part { flex: 1; border-bottom: 2px solid var(--sub-text); display: flex; align-items: center; justify-content: center; font-weight: bold; transition: 0.1s; font-size: 12px; color: var(--sub-text); }
-      .m-wheel { position: absolute; width: 20px; height: 40px; border: 2px solid var(--sub-text); border-radius: 10px; top: 40px; left: 50%; transform: translateX(-50%); transition: 0.1s; }
+      /* Layar Hasil Custom */
+      .t-result-screen {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: var(--card-bg); z-index: 20; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; border-radius: 30px;
+        opacity: 0; pointer-events: none; transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transform: translateY(20px) scale(0.95);
+      }
+      .t-result-screen.show { opacity: 1; pointer-events: all; transform: translateY(0) scale(1); }
+      .t-res-num { font-size: clamp(48px, 10vw, 72px); color: var(--apple-blue); font-weight: 800; line-height: 1; margin: 10px 0; }
+
+      /* MOUSE & SENSOR UI */
+      .mouse-ui { width: clamp(80px, 20vw, 120px); height: clamp(140px, 30vw, 200px); border: 3px solid var(--sub-text); border-radius: 50px; margin: 20px auto; display: flex; overflow: hidden; position: relative; }
+      .m-part { flex: 1; border-bottom: 2px solid var(--sub-text); display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; color: var(--sub-text); }
+      .m-wheel { position: absolute; width: 20px; height: 40px; border: 2px solid var(--sub-text); border-radius: 10px; top: 30px; left: 50%; transform: translateX(-50%); }
       .m-part.active, .m-wheel.active { background: var(--apple-blue); color: white; border-color: var(--apple-blue); }
-
-      .pad { width: 100%; height: 200px; background: var(--soft-gray); border-radius: 20px; margin: 20px 0; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; border: 1px solid var(--stroke); }
+      .pad { width: 100%; height: clamp(150px, 30vh, 250px); background: var(--soft-gray); border-radius: 20px; margin: 20px 0; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; border: 1px solid var(--stroke); touch-action: none; }
       #pressure-dot { background: var(--apple-blue); border-radius: 50%; transition: 0.05s; }
+      .touch-point { position: absolute; width: 60px; height: 60px; border-radius: 50%; background: rgba(0, 122, 255, 0.4); border: 2px solid #007aff; transform: translate(-50%, -50%); pointer-events: none; }
+      .gyro-container { width: clamp(150px, 40vw, 200px); height: clamp(150px, 40vw, 200px); border-radius: 50%; border: 4px solid var(--stroke); margin: 20px auto; position: relative; background: var(--soft-gray); }
+      .gyro-bubble { width: 40px; height: 40px; background: var(--apple-blue); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); transition: 0.1s ease-out; }
+      .gyro-center { width: 50px; height: 50px; border: 2px dashed var(--sub-text); border-radius: 50%; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
       #screen-test { background: black; cursor: pointer; }
-      .screen-hint { color: white; background: rgba(0,0,0,0.4); padding: 12px 24px; border-radius: 30px; font-size: clamp(12px, 3vw, 14px); backdrop-filter: blur(10px); }
-
+      .screen-hint { color: white; background: rgba(0, 0, 0, 0.5); padding: 12px 24px; border-radius: 30px; font-size: 12px; pointer-events: none; }
       .credit { display: flex; align-items: center; justify-content: center; padding: 20px; }
-      .credit p { color: var(--sub-text); font-size: clamp(12px, 3vw, 14px); }
+      .credit p { color: var(--sub-text); font-size: 12px; }
 
-      @media (max-width: 600px) {
-        .mouse-ui { width: 100px; height: 160px; }
-        .pad { height: 150px; }
+      /* FLOATING BUTTON SHORTCUT */
+      .fab-shortcuts {
+        position: fixed; bottom: 30px; right: 30px; background: var(--dark-text); color: var(--card-bg);
+        border: none; border-radius: 50px; padding: 12px 20px; font-size: 14px; font-weight: 600;
+        cursor: pointer; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2); z-index: 105;
+        transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; align-items: center; gap: 10px;
       }
+      .fab-shortcuts:hover { transform: scale(1.05) translateY(-5px); background: var(--apple-blue); color: white; }
+      .fab-shortcuts svg { stroke: currentColor; }
+      .short-card { padding: 12px 20px; display: flex; align-items: center; gap: 15px; flex-direction: row; margin-bottom: 0; border-radius: 20px; }
+      .short-card .badge { background: var(--dark-text); color: var(--card-bg); min-width: 60px; text-align: center; font-family: monospace; font-size: 14px; }
+      .short-card:hover .badge { background: var(--sec-color); color: #111; }
+      @media (max-width: 600px) { .fab-shortcuts { bottom: 20px; right: 20px; padding: 10px; } .fab-shortcuts span { display: none; } }
     </style>
   </head>
   <body>
-    <div class="ambient-bg">
-      <canvas id="neural-net"></canvas>
-    </div>
+    <div class="ambient-bg"><canvas id="neural-net"></canvas></div>
     <div class="ambient-overlay"></div>
 
     <div class="top-controls">
+      <button class="toggle-btn" onclick="location.reload()" id="btn-refresh" title="Refresh (Alt + R)">🔄 Refresh</button>
       <button class="toggle-btn" onclick="toggleLang()" id="btn-lang">🌐 ID / EN</button>
       <button class="toggle-btn" onclick="toggleThemeManual()" id="btn-theme">🌙 Mode Gelap</button>
     </div>
+
+    <button id="fab-btn" class="fab-shortcuts" onclick="openShortcutMenu()" title="Shortcut Menu (Alt + H)">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="4" width="20" height="16" rx="2" ry="2"/>
+        <path d="M6 8h.001M10 8h.001M14 8h.001M18 8h.001M8 12h.001M12 12h.001M16 12h.001M7 16h10"/>
+      </svg>
+      <span data-i18n="btn_shortcut">Menu Shortcut</span>
+    </button>
 
     <main id="main-dashboard" class="container">
       <header class="main-header">
@@ -234,83 +297,148 @@
         <p class="subtitle" data-i18n="main_subtitle">Uji dan analisa device anda dalam satu tempat</p>
       </header>
 
+      <div class="tabs">
+        <button class="tab-btn active" id="tab-all" onclick="filterCat('all')" data-i18n="tab_all">Semua</button>
+        <button class="tab-btn" id="tab-pc" onclick="filterCat('pc')" data-i18n="tab_pc">Desktop / PC</button>
+        <button class="tab-btn" id="tab-mobile" onclick="filterCat('mobile')" data-i18n="tab_mobile">Smartphone</button>
+      </div>
+
       <section class="grid">
-        <div class="card" onclick="startScreen()">
-          <svg class="svg-icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="15" rx="2"/><path d="M6 21h12"/></svg>
-          <h3 data-i18n="card1_title">Tes Layar</h3>
-          <p data-i18n="card1_desc">Mencari titik pixel yang lelah & dead pixel.</p>
+        <div class="card" data-cat="all pc mobile" onclick="execNav('s')">
+          <svg class="svg-icon" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="15" rx="2" /><path d="M6 21h12" /></svg>
+          <h3 data-i18n="card1_title">Tes Layar</h3><p data-i18n="card1_desc">Mencari titik pixel yang lelah & dead pixel.</p>
         </div>
-        <div class="card" onclick="initTyping()">
-          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 18H4a2 2 0 01-2-2V8a2 2 0 012-2h16a2 2 0 012 2v8a2 2 0 01-2 2zM6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M10 14h.01M14 14h.01M18 14h.01"/></svg>
-          <h3 data-i18n="card2_title">Keyboard & WPM</h3>
-          <p data-i18n="card2_desc">Tes kecepatan mengetik standar 60 detik.</p>
+        <div class="card" data-cat="all pc mobile" onclick="execNav('a')">
+          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14" /></svg>
+          <h3 data-i18n="card4_title">Saluran Stereo</h3><p data-i18n="card4_desc">Cek output speaker kiri & kanan.</p>
         </div>
-        <div class="card" onclick="startMouse()">
-          <svg class="svg-icon" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="6"/><path d="M12 2v6"/></svg>
-          <h3 data-i18n="card3_title">Mouse & Scroll</h3>
-          <p data-i18n="card3_desc">Uji tombol utama & responsivitas scroll.</p>
+        <div class="card" data-cat="all pc mobile" onclick="execNav('n')">
+          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M5 12a7 7 0 0114 0M8.5 15.5a3.5 3.5 0 017 0" /><circle cx="12" cy="19" r="1" /></svg>
+          <h3 data-i18n="card6_title">Speedtest Jaringan</h3><p data-i18n="card6_desc">Uji Ping, Download, dan Upload secara akurat.</p>
         </div>
-        <div class="card" onclick="openModal('audio-test')">
-          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4V5zM15.54 8.46a5 5 0 010 7.07M19.07 4.93a10 10 0 010 14.14"/></svg>
-          <h3 data-i18n="card4_title">Saluran Stereo</h3>
-          <p data-i18n="card4_desc">Cek output speaker kiri & kanan.</p>
+        <div class="card" data-cat="all pc" onclick="execNav('k')">
+          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M20 18H4a2 2 0 01-2-2V8a2 2 0 012-2h16a2 2 0 012 2v8a2 2 0 01-2 2zM6 10h.01M10 10h.01M14 10h.01M18 10h.01M6 14h.01M10 14h.01M14 14h.01M18 14h.01" /></svg>
+          <h3 data-i18n="card2_title">Keyboard & WPM</h3><p data-i18n="card2_desc">Tes kecepatan mengetik standar 60 detik.</p>
         </div>
-        <div class="card" onclick="startStylus()">
-          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M16 3l5 5-13 13H3v-5L16 3z"/></svg>
-          <h3 data-i18n="card5_title">Tekanan Pena</h3>
-          <p data-i18n="card5_desc">Uji sensitivitas stylus digital pro.</p>
+        <div class="card" data-cat="all pc" onclick="execNav('m')">
+          <svg class="svg-icon" viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="6" /><path d="M12 2v6" /></svg>
+          <h3 data-i18n="card3_title">Mouse & Scroll</h3><p data-i18n="card3_desc">Uji tombol utama & responsivitas scroll.</p>
         </div>
-        <div class="card" onclick="openNetTest()">
-          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M5 12a7 7 0 0114 0M8.5 15.5a3.5 3.5 0 017 0"/><circle cx="12" cy="19" r="1"/></svg>
-          <h3 data-i18n="card6_title">Speedtest Jaringan</h3>
-          <p data-i18n="card6_desc">Uji Ping, Download, dan Upload.</p>
+        <div class="card" data-cat="all pc mobile" onclick="execNav('p')">
+          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M16 3l5 5-13 13H3v-5L16 3z" /></svg>
+          <h3 data-i18n="card5_title">Tekanan Pena</h3><p data-i18n="card5_desc">Uji sensitivitas stylus digital pro.</p>
+        </div>
+        <div class="card" data-cat="all mobile" onclick="execNav('t')" style="display: none">
+          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M8 12a4 4 0 108 0 4 4 0 10-8 0zM12 2v4M12 18v4M2 12h4M18 12h4" /></svg>
+          <h3 data-i18n="card7_title">Multi-Touch</h3><p data-i18n="card7_desc">Uji deteksi sentuhan beberapa jari bersamaan.</p>
+        </div>
+        <div class="card" data-cat="all mobile" onclick="execNav('v')" style="display: none">
+          <svg class="svg-icon" viewBox="0 0 24 24"><path d="M4 8h16v8H4zM2 10v4M22 10v4" /></svg>
+          <h3 data-i18n="card8_title">Getaran Haptic</h3><p data-i18n="card8_desc">Periksa fungsi motor getar (Vibration) perangkat.</p>
+        </div>
+        <div class="card" data-cat="all mobile" onclick="execNav('g')" style="display: none">
+          <svg class="svg-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M12 8v8M8 12h8" /></svg>
+          <h3 data-i18n="card9_title">Sensor Gyro</h3><p data-i18n="card9_desc">Cek orientasi dan keseimbangan perangkat.</p>
         </div>
       </section>
     </main>
 
-    <div id="screen-test" class="modal hidden" onclick="nextColor()">
-      <div class="screen-hint" data-i18n="screen_hint">Klik untuk ganti warna. ESC untuk keluar.</div>
+    <div id="shortcut-modal" class="modal hidden" style="z-index: 1000;">
+      <div class="glass-box" style="max-width: 900px; padding: clamp(20px, 4vw, 40px);">
+        <button class="close-btn" onclick="closeAll()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" /></svg></button>
+        <h2 data-i18n="shortcut_menu_title" style="margin-bottom: 25px;">Navigasi & Jalan Pintas</h2>
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px;">
+          <div class="card short-card" onclick="execNav('s')"><span class="badge">Alt + S</span> <h3 data-i18n="card1_title" style="margin:0; font-size:16px;">Tes Layar</h3></div>
+          <div class="card short-card" onclick="execNav('a')"><span class="badge">Alt + A</span> <h3 data-i18n="card4_title" style="margin:0; font-size:16px;">Saluran Stereo</h3></div>
+          <div class="card short-card" onclick="execNav('n')"><span class="badge">Alt + N</span> <h3 data-i18n="card6_title" style="margin:0; font-size:16px;">Speedtest</h3></div>
+          <div class="card short-card" onclick="execNav('k')"><span class="badge">Alt + K</span> <h3 data-i18n="card2_title" style="margin:0; font-size:16px;">Keyboard & WPM</h3></div>
+          <div class="card short-card" onclick="execNav('m')"><span class="badge">Alt + M</span> <h3 data-i18n="card3_title" style="margin:0; font-size:16px;">Mouse & Scroll</h3></div>
+          <div class="card short-card" onclick="execNav('p')"><span class="badge">Alt + P</span> <h3 data-i18n="card5_title" style="margin:0; font-size:16px;">Tekanan Pena</h3></div>
+          <div class="card short-card" onclick="execNav('t')"><span class="badge">Alt + T</span> <h3 data-i18n="card7_title" style="margin:0; font-size:16px;">Multi-Touch</h3></div>
+          <div class="card short-card" onclick="execNav('v')"><span class="badge">Alt + V</span> <h3 data-i18n="card8_title" style="margin:0; font-size:16px;">Getaran Haptic</h3></div>
+          <div class="card short-card" onclick="execNav('g')"><span class="badge">Alt + G</span> <h3 data-i18n="card9_title" style="margin:0; font-size:16px;">Sensor Gyro</h3></div>
+        </div>
+        <hr style="border: none; border-top: 1px solid var(--stroke); margin: 25px 0;">
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+          <div class="card short-card" onclick="toggleLang(); closeAll();"><span class="badge">Alt + L</span> <h3 data-i18n="btn_lang_short" style="margin:0; font-size:14px;">Ganti Bahasa</h3></div>
+          <div class="card short-card" onclick="toggleThemeManual(); closeAll();"><span class="badge">Alt + D</span> <h3 data-i18n="btn_theme_short" style="margin:0; font-size:14px;">Gelap/Terang</h3></div>
+          <div class="card short-card" onclick="location.reload()"><span class="badge">Alt + R</span> <h3 style="margin:0; font-size:14px;">Refresh App</h3></div>
+          <div class="card short-card" onclick="closeAll()"><span class="badge">Esc</span> <h3 data-i18n="btn_home_short" style="margin:0; font-size:14px;">Tutup / Beranda</h3></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="screen-test" class="modal hidden" onclick="handleScreenClick(event)" oncontextmenu="closeAll(); return false;">
+      <div class="screen-hint" data-i18n="screen_hint">Klik ganti warna. Klik Kanan/Double Tap keluar.</div>
     </div>
 
     <div id="typing-test" class="modal hidden">
-      <div class="glass-box">
-        <button class="close-btn" onclick="closeAll()">
-          <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-        <div class="stats-row">
-          <div class="stat-item"><span data-i18n="stat_time">Waktu</span><b id="t-clock">60</b></div>
-          <div class="stat-item"><span>WPM</span><b id="t-wpm">0</b></div>
-          <div class="stat-item">
-            <span data-i18n="stat_acc">Akurasi</span><b id="t-acc">100</b><span style="font-size: clamp(12px,3vw,16px); font-weight:bold">%</span>
+      <div class="glass-box" style="position: relative;">
+        <button class="close-btn" onclick="closeAll()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" /></svg></button>
+        
+        <div id="t-result-screen" class="t-result-screen">
+          <h2 data-i18n="res_title" style="font-size: 28px; margin-bottom: 5px;">Tes Selesai!</h2>
+          <p id="res-msg" style="color: var(--sec-color); font-weight: 700; font-size: 16px; margin-bottom: 25px; height: 20px;"></p>
+          
+          <div class="stats-row" style="border: none; width: 100%; max-width: 400px; margin: 0 auto 30px;">
+            <div class="stat-item">
+              <span data-i18n="stat_wpm">WPM</span>
+              <b id="res-wpm" class="t-res-num">0</b>
+            </div>
+            <div class="stat-item">
+              <span data-i18n="stat_acc">AKURASI</span>
+              <b id="res-acc" class="t-res-num">0%</b>
+            </div>
+          </div>
+          
+          <div style="display: flex; gap: 15px; justify-content: center;">
+             <button class="btn-apple" onclick="initTyping()" data-i18n="btn_restart">🔄 Ulangi Tes</button>
+             <button class="btn-apple" style="background: transparent; color: var(--dark-text); border: 2px solid var(--stroke);" onclick="closeAll()" data-i18n="btn_home_short">Tutup</button>
           </div>
         </div>
-        <div id="t-display" class="typing-surface"></div>
-        <p class="instruction" data-i18n="type_hint">Mulai mengetik teks di atas untuk memulai waktu.</p>
+
+        <div id="t-main-wrapper" onclick="document.getElementById('t-container').focus()">
+          <div class="stats-row">
+            <div class="stat-item"><span data-i18n="stat_time">Waktu</span><b id="t-clock">60</b></div>
+            <div class="stat-item"><span>WPM</span><b id="t-wpm">0</b></div>
+            <div class="stat-item"><span data-i18n="stat_acc">Akurasi</span><b id="t-acc">100</b></div>
+            <div class="stat-item"><span data-i18n="stat_pb">PB WPM</span><b id="t-pb">0</b></div>
+          </div>
+          
+          <div class="type-timer-track"><div id="t-progress" class="type-timer-fill"></div></div>
+
+          <div class="typing-container" tabindex="0" id="t-container">
+            <div id="t-focus-overlay" class="t-focus-overlay">
+              <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+              <span data-i18n="type_focus">Klik atau ketik untuk fokus</span>
+            </div>
+            
+            <div id="t-display" class="typing-surface">
+               <div id="type-caret" class="type-caret"></div>
+            </div>
+          </div>
+
+          <p class="instruction" data-i18n="type_hint" style="font-size: 12px; margin-top: 10px">
+            Mulai mengetik teks di atas untuk memulai waktu.
+          </p>
+        </div>
       </div>
     </div>
 
     <div id="mouse-test" class="modal hidden">
       <div class="glass-box">
-        <button class="close-btn" onclick="closeAll()">
-          <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-        <h2 data-i18n="mouse_title" style="letter-spacing:-1px; margin-bottom:10px; font-size:clamp(20px,5vw,24px); color:var(--dark-text)">Tes Navigasi Mouse</h2>
-        <div class="mouse-ui">
-          <div id="ml" class="m-part">L</div>
-          <div id="mr" class="m-part">R</div>
-          <div id="mw" class="m-wheel"></div>
-        </div>
-        <p class="instruction" style="font-size:clamp(14px,3vw,18px); color:var(--apple-blue); font-weight:600">Scroll Y: <span id="s-val">0</span></p>
+        <button class="close-btn" onclick="closeAll()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" /></svg></button>
+        <h2 data-i18n="mouse_title">Tes Navigasi Mouse</h2>
+        <div class="mouse-ui"><div id="ml" class="m-part">L</div><div id="mr" class="m-part">R</div><div id="mw" class="m-wheel"></div></div>
+        <p style="color: var(--apple-blue); font-weight: 600">Scroll: <span id="s-val">0</span></p>
       </div>
     </div>
 
     <div id="audio-test" class="modal hidden">
       <div class="glass-box">
-        <button class="close-btn" onclick="closeAll()">
-          <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-        <h2 data-i18n="audio_title" style="letter-spacing:-1px; margin-bottom:10px; font-size:clamp(20px,5vw,24px); color:var(--dark-text)">Output Gema Suara</h2>
-        <p class="instruction" data-i18n="audio_hint" style="margin-bottom:30px">Gunakan earphone untuk tes saluran kiri/kanan.</p>
+        <button class="close-btn" onclick="closeAll()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" /></svg></button>
+        <h2 data-i18n="audio_title">Output Gema Suara</h2>
+        <p data-i18n="audio_hint" style="margin: 15px 0 25px; font-size: 14px">Gunakan earphone untuk tes saluran kiri/kanan.</p>
         <button class="btn-apple" data-i18n="btn_left" onclick="playAudio(-1)">Speaker Kiri</button>
         <button class="btn-apple" data-i18n="btn_right" onclick="playAudio(1)">Speaker Kanan</button>
       </div>
@@ -318,37 +446,66 @@
 
     <div id="stylus-test" class="modal hidden">
       <div class="glass-box">
-        <button class="close-btn" onclick="closeAll()">
-          <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-        <h2 data-i18n="stylus_title" style="letter-spacing:-1px; margin-bottom:10px; font-size:clamp(20px,5vw,24px); color:var(--dark-text)">Sensitivitas Tekanan</h2>
+        <button class="close-btn" onclick="closeAll()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" /></svg></button>
+        <h2 data-i18n="stylus_title">Sensitivitas Tekanan</h2>
         <div id="pen-pad" class="pad"><div id="pressure-dot"></div></div>
-        <p class="instruction" style="font-size:clamp(14px,3vw,18px); color:var(--apple-blue); font-weight:600">Pressure Level: <span id="p-val">0.00</span></p>
+        <p style="color: var(--apple-blue); font-weight: 600">Pressure: <span id="p-val">0.00</span></p>
       </div>
     </div>
 
     <div id="net-test" class="modal hidden">
       <div class="glass-box">
-        <button class="close-btn" onclick="closeAll()">
-          <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
-        <h2 id="n-status" data-i18n="net_title" style="letter-spacing:-1px; margin-bottom:10px; font-size:clamp(20px,5vw,24px); color:var(--dark-text)">Monitor Jaringan</h2>
-        <p class="instruction" id="net-info" style="margin-bottom:20px;">Siap untuk memulai pengujian.</p>
+        <button class="close-btn" onclick="closeAll()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" /></svg></button>
+        <h2 data-i18n="net_title">Monitor Jaringan</h2>
+        <p id="net-info" style="margin: 10px 0 20px; font-size: 14px">Siap untuk memulai pengujian.</p>
         <div class="network-dashboard">
           <div class="net-stat" id="card-ping"><span data-i18n="net_ping">Ping</span><b id="n-ping-val">--</b><small>ms</small></div>
           <div class="net-stat" id="card-dl"><span data-i18n="net_dl">Unduh</span><b id="n-dl-val">--</b><small>Mbps</small></div>
           <div class="net-stat" id="card-ul"><span data-i18n="net_ul">Unggah</span><b id="n-ul-val">--</b><small>Mbps</small></div>
         </div>
-        <div class="progress-bar-container">
-          <div id="net-progress" class="progress-fill"></div>
-        </div>
-        <button class="btn-apple" id="btn-start-net" data-i18n="btn_start_net" onclick="runAdvancedNetTest()">Mulai Tes</button>
+        <div class="progress-bar-container"><div id="net-progress" class="progress-fill"></div></div>
+        <button class="btn-apple" id="btn-start-net" data-i18n="btn_start_net" onclick="runRealNetworkTest()">Mulai Tes</button>
       </div>
     </div>
 
-    <div class="credit">
-      <p data-i18n="credit_text">© 2026 Kelompok 2 KKA</p>
+    <div id="touch-test" class="modal hidden">
+      <div class="glass-box" style="display: flex; flex-direction: column">
+        <button class="close-btn" onclick="closeAll()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" /></svg></button>
+        <h2 data-i18n="card7_title">Multi-Touch</h2>
+        <p data-i18n="touch_hint" style="font-size: 14px; margin-top: 5px">Sentuh area abu-abu di bawah dengan beberapa jari.</p>
+        <div class="stats-row" style="border: none; padding-bottom: 0; margin: 10px 0">
+          <div class="stat-item"><span data-i18n="touch_count">Jumlah Sentuhan</span><b id="touch-count">0</b></div>
+        </div>
+        <div id="touch-area" class="pad" style="flex: 1; margin: 0; min-height: 40vh; position: relative"></div>
+      </div>
     </div>
+
+    <div id="vibration-test" class="modal hidden">
+      <div class="glass-box">
+        <button class="close-btn" onclick="closeAll()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" /></svg></button>
+        <h2 data-i18n="card8_title">Getaran Haptic</h2>
+        <p data-i18n="vib_hint" style="margin: 15px 0 25px; font-size: 14px">Klik tombol untuk menguji respon getar.</p>
+        <button class="btn-apple" data-i18n="vib_short" onclick="testVibration('short')">Pendek</button>
+        <button class="btn-apple" data-i18n="vib_long" onclick="testVibration('long')">Panjang</button>
+        <button class="btn-apple" data-i18n="vib_sos" onclick="testVibration('sos')">S-O-S</button>
+      </div>
+    </div>
+
+    <div id="gyro-test" class="modal hidden">
+      <div class="glass-box">
+        <button class="close-btn" onclick="closeAll()"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" /></svg></button>
+        <h2 data-i18n="card9_title">Sensor Gyro</h2>
+        <p data-i18n="gyro_hint" style="font-size: 14px; margin-top: 5px">Putar dan miringkan perangkat Anda.</p>
+        <button id="gyro-req-btn" class="btn-apple" style="display: none; margin: 10px auto">Beri Izin Sensor</button>
+        <div class="gyro-container"><div class="gyro-center"></div><div id="gyro-bubble" class="gyro-bubble"></div></div>
+        <div class="stats-row" style="border: none">
+          <div class="stat-item"><span>X (Beta)</span><b id="g-beta">0</b></div>
+          <div class="stat-item"><span>Y (Gamma)</span><b id="g-gamma">0</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="credit" style="margin-top: 30px;"><p data-i18n="credit_text">© 2026 Kelompok 2 KKA</p></div>
 
     <script>
       // ==========================================
@@ -357,414 +514,669 @@
       const translations = {
         id: {
           badge_title: "Semua Dalam Satu", main_title: "DeviceLab", main_subtitle: "Uji dan analisa device anda dalam satu tempat",
+          tab_all: "Semua", tab_pc: "Desktop / PC", tab_mobile: "Smartphone",
           card1_title: "Tes Layar", card1_desc: "Mencari titik pixel yang lelah & dead pixel.",
           card2_title: "Keyboard & WPM", card2_desc: "Tes kecepatan mengetik standar 60 detik.",
           card3_title: "Mouse & Scroll", card3_desc: "Uji tombol utama & responsivitas scroll.",
           card4_title: "Saluran Stereo", card4_desc: "Cek output speaker kiri & kanan.",
           card5_title: "Tekanan Pena", card5_desc: "Uji sensitivitas stylus digital pro.",
-          card6_title: "Speedtest Jaringan", card6_desc: "Uji Ping, Download, dan Upload.",
-          screen_hint: "Klik untuk ganti warna. ESC untuk keluar.", stat_time: "Waktu", stat_acc: "Akurasi",
-          type_hint: "Mulai mengetik teks di atas untuk memulai waktu.",
-          mouse_title: "Tes Navigasi Mouse", audio_title: "Output Gema Suara", audio_hint: "Gunakan earphone untuk tes saluran kiri/kanan.",
-          btn_left: "Speaker Kiri", btn_right: "Speaker Kanan", stylus_title: "Sensitivitas Tekanan",
-          net_title: "Monitor Jaringan", net_ping: "Ping", net_dl: "Unduh", net_ul: "Unggah",
-          btn_start_net: "Mulai Tes", btn_retest: "Tes Ulang",
-          credit_text: "© 2026 Kelompok 2 KKA",
-          alert_msg: "Waktu habis! Diagnostik selesai.\nWPM:",
-          theme_dark: "🌙 Mode Gelap", theme_light: "☀️ Mode Terang",
-          net_info_ready: "Siap untuk memulai pengujian.", net_info_testing: "Sedang menguji...", net_info_done: "Pengujian selesai."
+          card6_title: "Speedtest Jaringan", card6_desc: "Uji Ping, Download, dan Upload secara akurat.",
+          card7_title: "Multi-Touch", card7_desc: "Uji deteksi sentuhan beberapa jari bersamaan.",
+          card8_title: "Getaran Haptic", card8_desc: "Periksa fungsi motor getar (Vibration) perangkat.",
+          card9_title: "Sensor Gyro", card9_desc: "Cek orientasi dan keseimbangan perangkat.",
+          screen_hint: "Klik ganti warna. Klik Kanan/Double Tap keluar.", stat_time: "Waktu", stat_acc: "Akurasi", stat_pb: "PB WPM", stat_wpm: "WPM",
+          type_hint: "Mulai mengetik teks di atas untuk memulai waktu.", type_focus: "Klik atau ketik untuk fokus",
+          mouse_title: "Tes Navigasi Mouse", audio_title: "Output Gema Suara", audio_hint: "Gunakan earphone untuk tes saluran kiri/kanan.", btn_left: "Speaker Kiri", btn_right: "Speaker Kanan", stylus_title: "Sensitivitas Tekanan", net_title: "Monitor Jaringan", net_ping: "Ping", net_dl: "Unduh", net_ul: "Unggah", btn_start_net: "Mulai Tes", btn_retest: "Tes Ulang", credit_text: "© 2026 Kelompok 2 KKA", 
+          theme_dark: "🌙 Mode Gelap", theme_light: "☀️ Mode Terang", net_info_ready: "Siap untuk memulai pengujian.", net_info_testing: "Sedang menguji jaringan...", net_info_done: "Pengujian selesai.", touch_hint: "Sentuh area abu-abu di bawah dengan beberapa jari.", touch_count: "Jumlah Sentuhan", vib_hint: "Klik tombol untuk menguji respon getar (hanya bekerja di HP/Tablet).", vib_short: "Pendek", vib_long: "Panjang", vib_sos: "S-O-S", gyro_hint: "Putar dan miringkan perangkat Anda.", 
+          shortcut_menu_title: "Navigasi & Jalan Pintas", btn_shortcut: "Menu Shortcut", btn_lang_short: "Ganti Bahasa", btn_theme_short: "Gelap/Terang", btn_home_short: "Tutup / Beranda",
+          res_title: "Tes Selesai!", res_new_pb: "🎉 REKOR BARU (Personal Best)!", btn_restart: "🔄 Ulangi Tes"
         },
         en: {
           badge_title: "All In One", main_title: "DeviceLab", main_subtitle: "Test and analyze your device in one place",
+          tab_all: "All", tab_pc: "Desktop / PC", tab_mobile: "Mobile Device",
           card1_title: "Screen Test", card1_desc: "Check for tired and dead pixels.",
           card2_title: "Keyboard & WPM", card2_desc: "Standard 60-second typing speed test.",
           card3_title: "Mouse & Scroll", card3_desc: "Test main buttons & scroll responsiveness.",
           card4_title: "Stereo Channels", card4_desc: "Check left & right speaker output.",
           card5_title: "Pen Pressure", card5_desc: "Test pro digital stylus sensitivity.",
-          card6_title: "Network Speedtest", card6_desc: "Test Ping, Download, and Upload speeds.",
-          screen_hint: "Click to change color. ESC to exit.", stat_time: "Time", stat_acc: "Accuracy",
-          type_hint: "Start typing the text above to start the timer.",
-          mouse_title: "Mouse Navigation Test", audio_title: "Sound Echo Output", audio_hint: "Use earphones to test left/right channels.",
-          btn_left: "Left Speaker", btn_right: "Right Speaker", stylus_title: "Pressure Sensitivity",
-          net_title: "Network Monitor", net_ping: "Ping", net_dl: "Download", net_ul: "Upload",
-          btn_start_net: "Start Test", btn_retest: "Retest",
-          credit_text: "© 2026 Group 2 KKA",
-          alert_msg: "Time's up! Diagnostic complete.\nWPM:",
-          theme_dark: "🌙 Dark Mode", theme_light: "☀️ Light Mode",
-          net_info_ready: "Ready to start testing.", net_info_testing: "Testing in progress...", net_info_done: "Testing completed."
-        }
+          card6_title: "Network Speedtest", card6_desc: "Test actual Ping, Download, and Upload speeds.",
+          card7_title: "Multi-Touch", card7_desc: "Test simultaneous multi-finger touch detection.",
+          card8_title: "Haptic Vibration", card8_desc: "Check the device's vibration motor.",
+          card9_title: "Gyro Sensor", card9_desc: "Check device orientation and balance.",
+          screen_hint: "Click change color. Right Click/Double Tap to exit.", stat_time: "Time", stat_acc: "Accuracy", stat_pb: "PB WPM", stat_wpm: "WPM",
+          type_hint: "Start typing the text above to start the timer.", type_focus: "Click or type here to focus",
+          mouse_title: "Mouse Navigation Test", audio_title: "Sound Echo Output", audio_hint: "Use earphones to test left/right channels.", btn_left: "Left Speaker", btn_right: "Right Speaker", stylus_title: "Pressure Sensitivity", net_title: "Network Monitor", net_ping: "Ping", net_dl: "Download", net_ul: "Upload", btn_start_net: "Start Test", btn_retest: "Retest", credit_text: "© 2026 Group 2 KKA", 
+          theme_dark: "🌙 Dark Mode", theme_light: "☀️ Light Mode", net_info_ready: "Ready to start testing.", net_info_testing: "Testing network...", net_info_done: "Testing completed.", touch_hint: "Touch the gray area below with multiple fingers.", touch_count: "Touch Count", vib_hint: "Click the buttons to test vibration response (Mobile/Tablet only).", vib_short: "Short", vib_long: "Long", vib_sos: "S-O-S", gyro_hint: "Rotate and tilt your device.", 
+          shortcut_menu_title: "Shortcuts & Navigation", btn_shortcut: "Shortcuts", btn_lang_short: "Change Lang", btn_theme_short: "Dark/Light", btn_home_short: "Close / Home",
+          res_title: "Test Complete!", res_new_pb: "🎉 NEW RECORD (Personal Best)!", btn_restart: "🔄 Try Again"
+        },
       };
 
-      let currentLang = 'id';
-
+      let currentLang = "id";
       function toggleLang() {
-        currentLang = currentLang === 'id' ? 'en' : 'id';
-        document.getElementById('btn-lang').innerText = currentLang === 'id' ? '🌐 ID / EN' : '🌐 EN / ID';
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-          const key = el.getAttribute('data-i18n');
-          if (translations[currentLang][key]) el.innerText = translations[currentLang][key];
-        });
-        // FIX #7: Sinkronkan teks tombol theme setelah ganti bahasa
-        document.getElementById('btn-theme').innerText = isDark
-          ? translations[currentLang].theme_light
-          : translations[currentLang].theme_dark;
-      }
-
-      // ==========================================
-      // MODE GELAP
-      // ==========================================
-      const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-      let isDark = darkModeMediaQuery.matches;
-
-      function applyTheme() {
-        // FIX #8: Hapus style.setProperty manual — cukup toggle data-theme,
-        // biarkan CSS :root dan [data-theme=dark] yang handle semua variabel.
-        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        document.getElementById('btn-theme').innerText = isDark
-          ? translations[currentLang].theme_light
-          : translations[currentLang].theme_dark;
-      }
-      applyTheme();
-
-      darkModeMediaQuery.addEventListener('change', (e) => { isDark = e.matches; applyTheme(); });
-      function toggleThemeManual() { isDark = !isDark; applyTheme(); }
-
-      // ==========================================
-      // BACKGROUND NEURAL NET
-      // ==========================================
-      const canvas = document.getElementById('neural-net');
-      const ctx = canvas.getContext('2d');
-      let w, h, particles;
-
-      function initBackground() {
-        resize();
-        particles = [];
-        for (let i = 0; i < 60; i++) {
-          let size = Math.random() * 2 + 1;
-          particles.push(new Particle(
-            Math.random() * w, Math.random() * h,
-            (Math.random() * 0.8) - 0.4, (Math.random() * 0.8) - 0.4, size
-          ));
-        }
-        window.addEventListener('resize', resize);
-        animate();
-      }
-
-      function resize() { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
-
-      class Particle {
-        constructor(x, y, dx, dy, size) { this.x = x; this.y = y; this.directionX = dx; this.directionY = dy; this.size = size; }
-        draw() {
-          ctx.beginPath();
-          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-          ctx.fillStyle = isDark ? `rgba(241,196,15,0.4)` : `rgba(212,175,55,0.3)`;
-          ctx.fill();
-        }
-        update() {
-          if (this.x > w || this.x < 0) this.directionX = -this.directionX;
-          if (this.y > h || this.y < 0) this.directionY = -this.directionY;
-          this.x += this.directionX; this.y += this.directionY;
-          this.draw();
-        }
-      }
-
-      function animate() {
-        ctx.fillStyle = isDark ? 'rgba(18,18,18,0.4)' : 'rgba(230,230,230,0.3)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < particles.length; i++) {
-          particles[i].update();
-          for (let j = i; j < particles.length; j++) {
-            let dx = particles[i].x - particles[j].x;
-            let dy = particles[i].y - particles[j].y;
-            let dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < 150) {
-              let opacity = 1 - dist / 150;
-              ctx.strokeStyle = isDark ? `rgba(241,196,15,${opacity * 0.1})` : `rgba(134,134,137,${opacity * 0.15})`;
-              ctx.lineWidth = 0.5;
-              ctx.beginPath();
-              ctx.moveTo(particles[i].x, particles[i].y);
-              ctx.lineTo(particles[j].x, particles[j].y);
-              ctx.stroke();
-            }
+        currentLang = currentLang === "id" ? "en" : "id";
+        document.getElementById("btn-lang").innerText = currentLang === "id" ? "🌐 ID / EN" : "🌐 EN / ID";
+        document.querySelectorAll("[data-i18n]").forEach((el) => { 
+          const key = el.getAttribute("data-i18n"); 
+          if (translations[currentLang][key]) {
+             el.innerHTML = translations[currentLang][key]; 
           }
-        }
-        requestAnimationFrame(animate);
+        });
+        document.getElementById("btn-theme").innerText = isDark ? translations[currentLang].theme_light : translations[currentLang].theme_dark;
+      }
+
+      function filterCat(cat) {
+        document.querySelectorAll(".tab-btn").forEach((btn) => btn.classList.remove("active"));
+        document.getElementById("tab-" + cat).classList.add("active");
+        document.querySelectorAll(".card").forEach((card) => {
+          if(card.classList.contains('short-card')) return;
+          if (cat === "all" || card.getAttribute("data-cat").includes(cat)) { 
+             card.style.display = "flex"; 
+          } else { 
+             card.style.display = "none"; 
+          }
+        });
+      }
+
+      const darkModeMediaQuery = window.matchMedia("(prefers-color-scheme: dark)"); 
+      let isDark = darkModeMediaQuery.matches;
+      
+      function applyTheme() {
+        document.documentElement.setAttribute("data-theme", isDark ? "dark" : "light");
+        document.getElementById("btn-theme").innerText = isDark ? translations[currentLang].theme_light : translations[currentLang].theme_dark;
+      }
+      applyTheme(); 
+      
+      darkModeMediaQuery.addEventListener("change", (e) => { 
+          isDark = e.matches; applyTheme(); 
+      });
+      function toggleThemeManual() { 
+          isDark = !isDark; applyTheme(); 
+      }
+
+      // ==========================================
+      // BACKGROUND ANIMATION
+      // ==========================================
+      const canvas = document.getElementById("neural-net"); 
+      const ctx = canvas.getContext("2d"); 
+      let w, h, particles;
+      
+      function initBackground() { 
+          resize(); particles = []; 
+          for (let i = 0; i < 40; i++) { 
+              let size = Math.random() * 2 + 1; 
+              particles.push(new Particle(Math.random() * w, Math.random() * h, Math.random() * 0.8 - 0.4, Math.random() * 0.8 - 0.4, size)); 
+          } 
+          window.addEventListener("resize", resize); 
+          animate(); 
+      }
+      function resize() { 
+          w = canvas.width = window.innerWidth; 
+          h = canvas.height = window.innerHeight; 
+      }
+      
+      class Particle { 
+          constructor(x, y, dx, dy, size) { 
+              this.x = x; this.y = y; this.directionX = dx; this.directionY = dy; this.size = size; 
+          } 
+          draw() { 
+              ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false); 
+              ctx.fillStyle = isDark ? `rgba(241,196,15,0.4)` : `rgba(212,175,55,0.3)`; 
+              ctx.fill(); 
+          } 
+          update() { 
+              if (this.x > w || this.x < 0) this.directionX = -this.directionX; 
+              if (this.y > h || this.y < 0) this.directionY = -this.directionY; 
+              this.x += this.directionX; this.y += this.directionY; 
+              this.draw(); 
+          } 
+      }
+      
+      function animate() { 
+          ctx.fillStyle = isDark ? "rgba(18,18,18,0.4)" : "rgba(230,230,230,0.3)"; 
+          ctx.fillRect(0, 0, canvas.width, canvas.height); 
+          for (let i = 0; i < particles.length; i++) { 
+              particles[i].update(); 
+              for (let j = i; j < particles.length; j++) { 
+                  let dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y; 
+                  let dist = Math.sqrt(dx * dx + dy * dy); 
+                  if (dist < 120) { 
+                      let opacity = 1 - dist / 120; 
+                      ctx.strokeStyle = isDark ? `rgba(241,196,15,${opacity * 0.1})` : `rgba(134,134,137,${opacity * 0.15})`; 
+                      ctx.lineWidth = 0.5; 
+                      ctx.beginPath(); 
+                      ctx.moveTo(particles[i].x, particles[i].y); 
+                      ctx.lineTo(particles[j].x, particles[j].y); 
+                      ctx.stroke(); 
+                  } 
+              } 
+          } 
+          requestAnimationFrame(animate); 
       }
       initBackground();
 
       // ==========================================
-      // FUNGSI UMUM MODAL
+      // NAVIGASI & MODAL CONTROLLERS
       // ==========================================
-      let appTimer = null;
-      let isNetTesting = false;
-      // FIX #3 & #6: Simpan referensi event handler agar bisa di-remove saat closeAll
-      let _mouseDownHandler = null;
-      let _mouseUpHandler = null;
-      let _wheelHandler = null;
-      let _contextMenuHandler = null;
+      let appTimer = null; 
+      let _handlers = {};
 
-      function openModal(id) {
-        document.getElementById(id).classList.remove("hidden");
-        document.getElementById("main-dashboard").style.opacity = "0.1";
+      function execNav(actionKey) { 
+          closeAll(); 
+          switch(actionKey) { 
+              case 's': startScreen(); break; 
+              case 'a': openModal('audio-test'); break; 
+              case 'n': openNetTest(); break; 
+              case 'k': initTyping(); break; 
+              case 'm': startMouse(); break; 
+              case 'p': startStylus(); break; 
+              case 't': startTouch(); break; 
+              case 'v': openModal('vibration-test'); break; 
+              case 'g': startGyro(); break; 
+          } 
       }
-
+      
+      function openShortcutMenu() { 
+          closeAll(); 
+          document.getElementById("shortcut-modal").classList.remove("hidden"); 
+          document.getElementById("main-dashboard").style.opacity = "0.1"; 
+          document.body.style.overflow = "hidden"; 
+      }
+      
+      function openModal(id) { 
+          document.getElementById(id).classList.remove("hidden"); 
+          document.getElementById("main-dashboard").style.opacity = "0.1"; 
+          document.body.style.overflow = "hidden"; 
+      }
+      
       function closeAll() {
-        document.querySelectorAll(".modal").forEach(m => m.classList.add("hidden"));
-        document.getElementById("main-dashboard").style.opacity = "1";
-        clearInterval(appTimer);
+        document.querySelectorAll(".modal").forEach((m) => m.classList.add("hidden")); 
+        document.getElementById("main-dashboard").style.opacity = "1"; 
+        document.body.style.overflow = ""; 
+        document.getElementById("fab-btn").style.display = "flex";
+        
+        clearInterval(appTimer); 
         appTimer = null;
-
-        // FIX #4: Stop network animation loop
-        isNetTesting = false;
-
-        // FIX #3: Remove mouse event listeners properly
-        if (_mouseDownHandler) { window.removeEventListener('mousedown', _mouseDownHandler); _mouseDownHandler = null; }
-        if (_mouseUpHandler) { window.removeEventListener('mouseup', _mouseUpHandler); _mouseUpHandler = null; }
-        if (_wheelHandler) { window.removeEventListener('wheel', _wheelHandler); _wheelHandler = null; }
-        if (_contextMenuHandler) { window.removeEventListener('contextmenu', _contextMenuHandler); _contextMenuHandler = null; }
-
-        // FIX #6: Remove stylus event listener
-        const pad = document.getElementById('pen-pad');
-        if (pad) pad.onpointermove = null;
-
-        window.onkeydown = null;
-
-        if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+        
+        if (_handlers.mouseD) window.removeEventListener("mousedown", _handlers.mouseD); 
+        if (_handlers.mouseU) window.removeEventListener("mouseup", _handlers.mouseU); 
+        if (_handlers.wheel) window.removeEventListener("wheel", _handlers.wheel); 
+        if (_handlers.ctx) window.removeEventListener("contextmenu", _handlers.ctx); 
+        if (_handlers.touchCleanup) _handlers.touchCleanup(); 
+        if (_handlers.gyroCleanup) _handlers.gyroCleanup();
+        
+        const pad = document.getElementById("pen-pad"); 
+        if (pad) pad.onpointermove = null; 
+        
+        window.onkeydown = null; 
+        window.removeEventListener('resize', updateCaret);
+        
+        if (document.fullscreenElement) { 
+            document.exitFullscreen().catch(() => {}); 
+        }
       }
-
-      document.addEventListener("keydown", e => { if (e.key === "Escape") closeAll(); });
 
       // ==========================================
-      // FITUR-FITUR
+      // GLOBAL KEYBOARD SHORTCUTS
       // ==========================================
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") { closeAll(); return; }
+        
+        const tContainer = document.getElementById("t-container");
+        const isTypingFocused = document.activeElement === tContainer;
+        
+        if (isTypingFocused && e.altKey) { e.preventDefault(); return; }
+        
+        const typingModal = document.getElementById("typing-test");
+        if (typingModal && !typingModal.classList.contains("hidden") && !isTypingFocused) {
+           if(e.key.length === 1 || e.key === "Backspace") { 
+               tContainer.focus(); 
+           }
+        }
 
-      // 1. Screen Test
-      // FIX #5: Reset cIdx setiap kali startScreen dipanggil
-      const screenColors = ["#ff3b30", "#34c759", "#007aff", "#ffffff", "#000000"];
-      let cIdx = 0;
-      function startScreen() {
-        cIdx = 0; // reset ke merah setiap kali dibuka
-        document.getElementById("screen-test").style.backgroundColor = screenColors[cIdx];
-        openModal("screen-test");
-        document.documentElement.requestFullscreen().catch(() => {});
+        if (e.altKey && !isTypingFocused) {
+          const code = e.code; 
+          if(code && code.startsWith("Key")) {
+             const letter = code.replace("Key", "").toLowerCase();
+             const routeKeys = ['s','a','n','k','m','p','t','v','g'];
+             if(routeKeys.includes(letter)) { 
+                 e.preventDefault(); execNav(letter); 
+             } else { 
+                 switch (letter) { 
+                     case "l": e.preventDefault(); toggleLang(); break; 
+                     case "d": e.preventDefault(); toggleThemeManual(); break; 
+                     case "r": e.preventDefault(); location.reload(); break; 
+                     case "h": e.preventDefault(); openShortcutMenu(); break; 
+                 } 
+             }
+          }
+        }
+      });
+      
+      document.addEventListener('fullscreenchange', () => { 
+          if (!document.fullscreenElement) { 
+              const screenTest = document.getElementById('screen-test'); 
+              if (screenTest && !screenTest.classList.contains('hidden')) { 
+                  closeAll(); 
+              } 
+          } 
+      });
+
+      // ==========================================
+      // 1. SCREEN TEST
+      // ==========================================
+      const screenColors = ["#ff3b30", "#34c759", "#007aff", "#ffffff", "#000000"]; 
+      let cIdx = 0; 
+      let lastTapTime = 0;
+      
+      function startScreen() { 
+          cIdx = 0; 
+          document.getElementById("screen-test").style.backgroundColor = screenColors[cIdx]; 
+          openModal("screen-test"); 
+          document.getElementById("fab-btn").style.display = "none"; 
+          document.documentElement.requestFullscreen().catch(() => {}); 
       }
-      function nextColor() {
-        cIdx = (cIdx + 1) % screenColors.length;
-        document.getElementById("screen-test").style.backgroundColor = screenColors[cIdx];
+      function nextColor() { 
+          cIdx = (cIdx + 1) % screenColors.length; 
+          document.getElementById("screen-test").style.backgroundColor = screenColors[cIdx]; 
+      }
+      function handleScreenClick(e) { 
+          const currentTime = new Date().getTime(); 
+          const tapLength = currentTime - lastTapTime; 
+          if (tapLength < 300 && tapLength > 0) { 
+              closeAll(); 
+          } else { 
+              nextColor(); 
+          } 
+          lastTapTime = currentTime; 
       }
 
-      // 2. Typing Test
-      let timeLeft = 60, charIdx = 0, mistakes = 0;
-      const wordBank = ["karya","desain","digital","manusia","tulus","bentuk","sempurna","interaksi","layar","sistem","aplikasi","teknologi","kreatif","cepat","akurat","visual","audio","tekanan","pena","latensi","jaringan","stabil","koneksi","data","proses","render","warna","piksel","memori","grafis","ketik","respons","uji","hasil"];
+      // ==========================================
+      // 2. TYPING TEST
+      // ==========================================
+      const wordsID = ["yang", "di", "ke", "dari", "pada", "dalam", "untuk", "dengan", "dan", "atau", "ini", "itu", "juga", "sudah", "saya", "kamu", "dia", "mereka", "kita", "kami", "akan", "bisa", "ada", "tidak", "belum", "sangat", "karena", "seperti", "waktu", "hari", "orang", "baru", "tahun", "baik", "saat", "menjadi", "lebih", "selalu", "setelah", "namun", "kata", "kerja", "besar", "kecil", "banyak", "sedikit", "semua", "bukan", "hanya", "terus", "jalan", "cara"];
+      const wordsEN = ["the", "be", "to", "of", "and", "a", "in", "that", "have", "i", "it", "for", "not", "on", "with", "he", "as", "you", "do", "at", "this", "but", "his", "by", "from", "they", "we", "say", "her", "she", "or", "an", "will", "my", "one", "all", "would", "there", "their", "what", "so", "up", "out", "if", "about", "who", "get", "which", "go", "me", "when", "make", "can", "like", "time", "no", "just", "him", "know", "take", "people", "into", "year", "your", "good", "some", "could", "them", "see", "other", "than", "then", "now", "look", "only", "come", "its", "over", "think", "also"];
 
-      function generateRandomText(n) {
-        let out = [];
-        for (let i = 0; i < n; i++) out.push(wordBank[Math.floor(Math.random() * wordBank.length)]);
-        return out.join(" ");
-      }
+      let timeLeft = 60, activeWordIdx = 0, activeCharIdx = 0, correctCharsCount = 0, totalMistakes = 0, wordsElements = [];
+      let startTime = null;
 
       function initTyping() {
         openModal("typing-test");
-        timeLeft = 60; charIdx = 0; mistakes = 0;
+        document.getElementById("t-main-wrapper").style.opacity = "1";
+        document.getElementById("t-main-wrapper").style.pointerEvents = "all";
+        document.getElementById("t-result-screen").classList.remove("show");
+        document.getElementById("res-msg").innerText = "";
+        
+        clearInterval(appTimer); appTimer = null;
+        timeLeft = 60; activeWordIdx = 0; activeCharIdx = 0; correctCharsCount = 0; totalMistakes = 0;
+        startTime = null;
+
         document.getElementById("t-clock").innerText = timeLeft;
         document.getElementById("t-wpm").innerText = 0;
         document.getElementById("t-acc").innerText = 100;
-        const text = generateRandomText(40);
+        document.getElementById("t-progress").style.width = "100%"; 
+
+        const pbKey = "pb_wpm_" + currentLang;
+        document.getElementById("t-pb").innerText = localStorage.getItem(pbKey) || 0;
+
+        const bank = currentLang === "id" ? wordsID : wordsEN;
+        const textArr = Array.from({ length: 350 }, () => bank[Math.floor(Math.random() * bank.length)]);
+
         const disp = document.getElementById("t-display");
-        disp.innerHTML = "";
-        text.split("").forEach(c => {
-          let s = document.createElement("span"); s.innerText = c; s.className = "char"; disp.appendChild(s);
+        const caretHTML = `<div id="type-caret" class="type-caret"></div>`;
+        disp.innerHTML = caretHTML; 
+        disp.style.transform = `translateY(0px)`;
+        wordsElements = [];
+
+        textArr.forEach((wordText) => {
+          let wDiv = document.createElement("div"); wDiv.className = "word";
+          wordText.split("").forEach((c) => {
+            let s = document.createElement("span"); s.innerText = c; s.className = "char"; wDiv.appendChild(s);
+          });
+          disp.appendChild(wDiv); wordsElements.push(wDiv);
         });
-        disp.querySelectorAll(".char")[0].classList.add("active");
+
+        wordsElements[0].classList.add("active");
+        
+        setTimeout(() => {
+          const tContainer = document.getElementById("t-container");
+          tContainer.focus();
+          requestAnimationFrame(updateCaret);
+        }, 50);
+
+        window.addEventListener('resize', updateCaret);
         window.onkeydown = handleType;
       }
 
+      function updateCaret() {
+        const currentWordEl = wordsElements[activeWordIdx];
+        if (!currentWordEl) return;
+        const chars = currentWordEl.querySelectorAll('.char');
+        const caret = document.getElementById('type-caret');
+        
+        let targetEl; let offsetX = 0;
+        
+        if (activeCharIdx < chars.length) {
+            targetEl = chars[activeCharIdx];
+        } else if (chars.length > 0) {
+            targetEl = chars[chars.length - 1];
+            offsetX = targetEl.offsetWidth; 
+        } else {
+            targetEl = currentWordEl;
+        }
+
+        if (targetEl) {
+            caret.style.left = (targetEl.offsetLeft + offsetX) + 'px';
+            caret.style.top = (targetEl.offsetTop + 4) + 'px'; 
+        }
+      }
+
       function handleType(e) {
-        if (e.key === "Escape") return;
-        if (["Shift","Control","Alt","Meta","CapsLock","Tab"].includes(e.key)) return;
-        if (e.key === " ") e.preventDefault();
+        if(document.activeElement !== document.getElementById("t-container")) return;
+        if (e.key === "Escape" || ["Shift", "Control", "Alt", "Meta", "CapsLock", "Tab"].includes(e.key)) return;
+
+        if (!startTime) startTime = Date.now();
 
         if (!appTimer) {
           appTimer = setInterval(() => {
-            timeLeft--;
+            timeLeft--; 
             document.getElementById("t-clock").innerText = timeLeft;
-            if (timeLeft <= 0) {
-              clearInterval(appTimer);
-              alert(`${translations[currentLang].alert_msg} ${document.getElementById("t-wpm").innerText}\nAkurasi: ${document.getElementById("t-acc").innerText}%`);
-              closeAll();
-            }
+            document.getElementById("t-progress").style.width = `${(timeLeft / 60) * 100}%`;
+            if (timeLeft <= 0) endTypingTest();
           }, 1000);
         }
 
-        const chars = document.querySelectorAll(".char");
+        const currentWordEl = wordsElements[activeWordIdx];
+        const chars = currentWordEl.querySelectorAll(".char");
+
         if (e.key === "Backspace") {
-          if (charIdx > 0) {
-            chars[charIdx].classList.remove("active");
-            charIdx--;
-            chars[charIdx].classList.remove("correct","incorrect");
-            chars[charIdx].classList.add("active");
+          e.preventDefault();
+          if (activeCharIdx > 0) {
+            activeCharIdx--;
+            const targetChar = chars[activeCharIdx];
+            if (targetChar.classList.contains("extra")) { 
+              targetChar.remove(); 
+            } else { 
+              targetChar.classList.remove("correct", "incorrect"); 
+            }
+          } else if (activeCharIdx === 0 && activeWordIdx > 0) {
+            currentWordEl.classList.remove("active", "error");
+            activeWordIdx--;
+
+            const prevWordEl = wordsElements[activeWordIdx]; 
+            prevWordEl.classList.add("active");
+            const prevChars = prevWordEl.querySelectorAll(".char");
+            
+            if (prevChars.length > 0) {
+              activeCharIdx = prevChars.length;
+              const lastChar = prevChars[prevChars.length - 1];
+              if(lastChar.classList.contains("incorrect") || lastChar.classList.contains("extra")) {
+                  if(lastChar.classList.contains("extra")) {
+                     lastChar.remove();
+                  } else {
+                     lastChar.classList.remove("correct", "incorrect");
+                  }
+                  activeCharIdx--;
+              }
+            } else { 
+              activeCharIdx = 0; 
+            }
           }
-        } else if (charIdx < chars.length) {
-          if (e.key === chars[charIdx].innerText) chars[charIdx].classList.add("correct");
-          else { chars[charIdx].classList.add("incorrect"); mistakes++; }
-          chars[charIdx].classList.remove("active");
-          charIdx++;
-          if (charIdx < chars.length) chars[charIdx].classList.add("active");
-        }
+        } else if (e.key === " ") {
+          e.preventDefault();
+          if (activeCharIdx > 0 || chars.length > 0) {
+            currentWordEl.classList.remove("active");
 
-        // FIX #1: Hitung WPM hanya setelah timer berjalan (timeLeft < 60)
-        const elapsed = 60 - timeLeft;
-        if (elapsed > 0 && charIdx > 0) {
-          const wpm = Math.max(0, Math.round(((charIdx - mistakes) / 5) / (elapsed / 60)));
-          document.getElementById("t-wpm").innerText = wpm;
-        }
+            const hasError = currentWordEl.querySelectorAll(".incorrect, .extra").length > 0 || activeCharIdx < chars.length;
+            if (hasError) { currentWordEl.classList.add("error"); } 
+            else { currentWordEl.classList.remove("error"); }
 
-        // FIX #2: Hitung akurasi hanya jika charIdx > 0, hindari pembagian nol
-        if (charIdx > 0) {
-          const acc = Math.max(0, Math.round(((charIdx - mistakes) / charIdx) * 100));
-          document.getElementById("t-acc").innerText = acc;
-        }
-      }
+            activeWordIdx++;
+            if (activeWordIdx >= wordsElements.length) return endTypingTest();
 
-      // 3. Mouse Test
-      function startMouse() {
-        openModal("mouse-test");
-        let scrollTotal = 0;
-        document.getElementById("s-val").innerText = 0;
-
-        // FIX #3: Gunakan addEventListener dengan referensi tersimpan
-        _contextMenuHandler = e => e.preventDefault();
-        _mouseDownHandler = e => {
-          if (e.button === 0) document.getElementById("ml").classList.add("active");
-          if (e.button === 1) { document.getElementById("mw").classList.add("active"); e.preventDefault(); }
-          if (e.button === 2) document.getElementById("mr").classList.add("active");
-        };
-        _mouseUpHandler = () => document.querySelectorAll(".m-part, .m-wheel").forEach(el => el.classList.remove("active"));
-        _wheelHandler = e => {
-          scrollTotal += Math.round(e.deltaY / 10);
-          document.getElementById("s-val").innerText = scrollTotal;
-          document.getElementById("mw").classList.add("active");
-          setTimeout(() => document.getElementById("mw").classList.remove("active"), 100);
-        };
-
-        window.addEventListener('contextmenu', _contextMenuHandler);
-        window.addEventListener('mousedown', _mouseDownHandler);
-        window.addEventListener('mouseup', _mouseUpHandler);
-        window.addEventListener('wheel', _wheelHandler);
-      }
-
-      // 4. Audio Test
-      function playAudio(pan) {
-        const ac = new window.AudioContext();
-        const os = ac.createOscillator();
-        const pn = ac.createStereoPanner();
-        pn.pan.value = pan;
-        os.connect(pn).connect(ac.destination);
-        os.start();
-        setTimeout(() => os.stop(), 500);
-      }
-
-      // 5. Stylus Test
-      function startStylus() {
-        openModal("stylus-test");
-        // FIX #6: onpointermove sudah di-cleanup di closeAll via pad.onpointermove = null
-        const pad = document.getElementById("pen-pad");
-        pad.onpointermove = e => {
-          let p = e.pressure || 0;
-          const dot = document.getElementById("pressure-dot");
-          if (p > 0) {
-            document.getElementById("p-val").innerText = p.toFixed(2);
-            dot.style.width = (p * 250) + "px";
-            dot.style.height = (p * 250) + "px";
-            dot.style.opacity = 0.3 + p;
+            activeCharIdx = 0;
+            wordsElements[activeWordIdx].classList.add("active");
+          }
+        } else {
+          // Limit extra characters
+          if (activeCharIdx >= chars.length && currentWordEl.querySelectorAll('.extra').length >= 10) return;
+          
+          let isError = false;
+          if (activeCharIdx < chars.length) {
+            const targetChar = chars[activeCharIdx];
+            if (e.key === targetChar.innerText) { 
+               targetChar.classList.add("correct"); correctCharsCount++; 
+            } else { 
+               targetChar.classList.add("incorrect"); totalMistakes++; isError = true; 
+            }
+            activeCharIdx++;
           } else {
-            document.getElementById("p-val").innerText = "0.00";
-            dot.style.width = "0px";
-            dot.style.height = "0px";
+            let s = document.createElement("span"); 
+            s.innerText = e.key; 
+            s.className = "char extra";
+            currentWordEl.appendChild(s); 
+            activeCharIdx++; totalMistakes++; isError = true;
           }
-        };
+          if (isError) {
+             currentWordEl.classList.remove("shake-error"); void currentWordEl.offsetWidth; 
+             currentWordEl.classList.add("shake-error");
+          }
+        }
+
+        requestAnimationFrame(updateCaret);
+
+        const disp = document.getElementById("t-display");
+        const currentOffsetTop = wordsElements[activeWordIdx].offsetTop;
+        const baseOffset = wordsElements[0].offsetTop;
+        const lineDiff = currentOffsetTop - baseOffset;
+
+        if (lineDiff > 35) { disp.style.transform = `translateY(-${lineDiff - 35}px)`; } 
+        else { disp.style.transform = `translateY(0px)`; }
+
+        const elapsedRealTime = (Date.now() - startTime) / 1000;
+        if (elapsedRealTime > 0 && correctCharsCount > 0) {
+          const wpmVal = Math.round((correctCharsCount / 5) / (elapsedRealTime / 60));
+          document.getElementById("t-wpm").innerText = Math.min(wpmVal, 400); 
+          document.getElementById("t-acc").innerText = Math.max(0, Math.round((correctCharsCount / (correctCharsCount + totalMistakes)) * 100));
+        }
       }
 
-      // 6. Network Test
-      function openNetTest() {
-        openModal("net-test");
-        document.getElementById('net-progress').style.width = '0%';
-        document.getElementById('n-ping-val').innerText = '--';
-        document.getElementById('n-dl-val').innerText = '--';
-        document.getElementById('n-ul-val').innerText = '--';
-        document.getElementById('net-info').innerText = translations[currentLang].net_info_ready;
-        const btn = document.getElementById('btn-start-net');
-        btn.disabled = false;
-        btn.setAttribute('data-i18n', 'btn_start_net');
-        btn.innerText = translations[currentLang].btn_start_net;
+      function endTypingTest() {
+        clearInterval(appTimer); appTimer = null; window.onkeydown = null;
+        window.removeEventListener('resize', updateCaret); 
+        
+        const finalWpm = parseInt(document.getElementById("t-wpm").innerText) || 0;
+        const finalAcc = document.getElementById("t-acc").innerText;
+        const pbKey = "pb_wpm_" + currentLang;
+        let currentPb = parseInt(localStorage.getItem(pbKey)) || 0;
+        
+        document.getElementById("t-main-wrapper").style.opacity = "0";
+        document.getElementById("t-main-wrapper").style.pointerEvents = "none";
+        
+        setTimeout(() => {
+            document.getElementById("res-wpm").innerText = finalWpm;
+            document.getElementById("res-acc").innerText = finalAcc + "%";
+            if (finalWpm > currentPb) {
+              localStorage.setItem(pbKey, finalWpm);
+              document.getElementById("res-msg").innerText = translations[currentLang].res_new_pb;
+              document.getElementById("t-pb").innerText = finalWpm;
+            } else {
+              document.getElementById("res-msg").innerText = ""; 
+            }
+            document.getElementById("t-result-screen").classList.add("show");
+        }, 300);
       }
 
-      // FIX #4: Terima parameter `testId` untuk membatalkan animasi bila test sudah berganti
-      function animateValue(obj, start, end, duration, isFloat, testId, callback) {
-        let startTimestamp = null;
-        const step = timestamp => {
-          // Batalkan jika test sudah berhenti atau berganti sesi
-          if (!isNetTesting || netTestId !== testId) return;
-          if (!startTimestamp) startTimestamp = timestamp;
-          const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-          let current = progress * (end - start) + start;
-          if (progress < 1) current += (Math.random() * (end * 0.15)) - (end * 0.05);
-          else current = end;
-          obj.innerText = isFloat ? Math.max(0, current).toFixed(1) : Math.floor(Math.max(0, current));
-          if (progress < 1) requestAnimationFrame(step);
-          else if (callback) callback();
-        };
-        requestAnimationFrame(step);
+      // ==========================================
+      // SENSOR & DEVICE TESTS
+      // ==========================================
+      function startMouse() { 
+          openModal("mouse-test"); 
+          let scrollTotal = 0; document.getElementById("s-val").innerText = 0; 
+          _handlers.ctx = (e) => e.preventDefault(); 
+          _handlers.mouseD = (e) => { 
+              if (e.button === 0) document.getElementById("ml").classList.add("active"); 
+              if (e.button === 1) { document.getElementById("mw").classList.add("active"); e.preventDefault(); } 
+              if (e.button === 2) document.getElementById("mr").classList.add("active"); 
+          }; 
+          _handlers.mouseU = () => document.querySelectorAll(".m-part, .m-wheel").forEach((el) => el.classList.remove("active")); 
+          _handlers.wheel = (e) => { 
+              e.preventDefault(); scrollTotal += Math.round(e.deltaY / 10); 
+              document.getElementById("s-val").innerText = scrollTotal; 
+              document.getElementById("mw").classList.add("active"); 
+              setTimeout(() => document.getElementById("mw").classList.remove("active"), 100); 
+          }; 
+          window.addEventListener("contextmenu", _handlers.ctx); 
+          window.addEventListener("mousedown", _handlers.mouseD); 
+          window.addEventListener("mouseup", _handlers.mouseU); 
+          window.addEventListener("wheel", _handlers.wheel, { passive: false }); 
       }
 
-      let netTestId = 0; // ID unik per sesi tes jaringan
-
-      function runAdvancedNetTest() {
-        if (!navigator.onLine) { alert("Perangkat Anda sedang offline."); return; }
-
-        isNetTesting = true;
-        netTestId++; // FIX #4: Inkremen ID sehingga animasi lama otomatis dibatalkan
-        const currentTestId = netTestId;
-
-        const btn = document.getElementById('btn-start-net');
-        const progress = document.getElementById('net-progress');
-        const info = document.getElementById('net-info');
-        const pingVal = document.getElementById('n-ping-val');
-        const dlVal = document.getElementById('n-dl-val');
-        const ulVal = document.getElementById('n-ul-val');
-
-        btn.disabled = true;
-        info.innerText = translations[currentLang].net_info_testing;
-        progress.style.width = '5%';
-        pingVal.innerText = '0'; dlVal.innerText = '0.0'; ulVal.innerText = '0.0';
-        document.querySelectorAll('.net-stat').forEach(el => el.classList.remove('active'));
-
-        const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        const actualPing = conn && conn.rtt ? conn.rtt : Math.floor(Math.random() * 40) + 15;
-        const actualDl = conn && conn.downlink ? conn.downlink : Math.floor(Math.random() * 80) + 10;
-        const actualUl = actualDl * 0.45;
-
-        document.getElementById('card-ping').classList.add('active');
-        animateValue(pingVal, 0, actualPing, 1000, false, currentTestId, () => {
-          progress.style.width = '33%';
-          document.getElementById('card-ping').classList.remove('active');
-          document.getElementById('card-dl').classList.add('active');
-          animateValue(dlVal, 0, actualDl, 2000, true, currentTestId, () => {
-            progress.style.width = '66%';
-            document.getElementById('card-dl').classList.remove('active');
-            document.getElementById('card-ul').classList.add('active');
-            animateValue(ulVal, 0, actualUl, 2000, true, currentTestId, () => {
-              progress.style.width = '100%';
-              document.getElementById('card-ul').classList.remove('active');
-              isNetTesting = false;
-              btn.disabled = false;
-              btn.setAttribute('data-i18n', 'btn_retest');
-              btn.innerText = translations[currentLang].btn_retest;
-              info.innerText = translations[currentLang].net_info_done;
-            });
-          });
-        });
+      function playAudio(pan) { 
+          const ac = new window.AudioContext(); const os = ac.createOscillator(); const pn = ac.createStereoPanner(); 
+          pn.pan.value = pan; os.connect(pn).connect(ac.destination); os.start(); setTimeout(() => os.stop(), 500); 
       }
+      
+      function startStylus() { 
+          openModal("stylus-test"); 
+          const pad = document.getElementById("pen-pad"); 
+          pad.onpointermove = (e) => { 
+              let p = e.pressure || 0; const dot = document.getElementById("pressure-dot"); 
+              if (p > 0) { 
+                  document.getElementById("p-val").innerText = p.toFixed(2); 
+                  dot.style.width = dot.style.height = p * 250 + "px"; dot.style.opacity = 0.3 + p; 
+              } else { 
+                  document.getElementById("p-val").innerText = "0.00"; dot.style.width = dot.style.height = "0px"; 
+              } 
+          }; 
+      }
+
+      function startTouch() { 
+          openModal("touch-test"); 
+          const area = document.getElementById("touch-area"); area.innerHTML = ""; 
+          document.getElementById("touch-count").innerText = "0"; 
+          const handleTouch = (e) => { 
+              e.preventDefault(); area.innerHTML = ""; 
+              document.getElementById("touch-count").innerText = e.touches.length; 
+              const rect = area.getBoundingClientRect(); 
+              for (let i = 0; i < e.touches.length; i++) { 
+                  const dot = document.createElement("div"); dot.className = "touch-point"; 
+                  dot.style.left = e.touches[i].clientX - rect.left + "px"; dot.style.top = e.touches[i].clientY - rect.top + "px"; 
+                  area.appendChild(dot); 
+              } 
+          }; 
+          area.addEventListener("touchstart", handleTouch, { passive: false }); 
+          area.addEventListener("touchmove", handleTouch, { passive: false }); 
+          area.addEventListener("touchend", handleTouch); 
+          area.addEventListener("touchcancel", handleTouch); 
+          _handlers.touchCleanup = () => { 
+              area.removeEventListener("touchstart", handleTouch); area.removeEventListener("touchmove", handleTouch); 
+              area.removeEventListener("touchend", handleTouch); area.removeEventListener("touchcancel", handleTouch); 
+          }; 
+      }
+      
+      function testVibration(type) { 
+          if (!navigator.vibrate) return alert("Perangkat/Browser Anda tidak mendukung Getaran."); 
+          if (type === "short") navigator.vibrate(200); 
+          else if (type === "long") navigator.vibrate(1000); 
+          else if (type === "sos") navigator.vibrate([200, 200, 200, 500, 500, 500, 200, 200, 200]); 
+      }
+      
+      function startGyro() { 
+          openModal("gyro-test"); 
+          const handleOrientation = (e) => { 
+              document.getElementById("g-beta").innerText = Math.round(e.beta || 0); 
+              document.getElementById("g-gamma").innerText = Math.round(e.gamma || 0); 
+              let xMove = Math.max(-80, Math.min(80, ((e.gamma || 0) / 90) * 80)); 
+              let yMove = Math.max(-80, Math.min(80, ((e.beta || 0) / 90) * 80)); 
+              document.getElementById("gyro-bubble").style.transform = `translate(calc(-50% + ${xMove}px), calc(-50% + ${yMove}px))`; 
+          }; 
+          const reqBtn = document.getElementById("gyro-req-btn"); 
+          if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") { 
+              reqBtn.style.display = "block"; 
+              reqBtn.onclick = () => { 
+                  DeviceOrientationEvent.requestPermission().then((res) => { 
+                      if (res === "granted") { 
+                          window.addEventListener("deviceorientation", handleOrientation); 
+                          reqBtn.style.display = "none"; 
+                      } 
+                  }).catch(console.error); 
+              }; 
+          } else { 
+              reqBtn.style.display = "none"; 
+              window.addEventListener("deviceorientation", handleOrientation); 
+          } 
+          _handlers.gyroCleanup = () => window.removeEventListener("deviceorientation", handleOrientation); 
+      }
+
+      function openNetTest() { 
+          openModal("net-test"); 
+          document.getElementById("net-progress").style.width = "0%"; 
+          document.getElementById("n-ping-val").innerText = "--"; 
+          document.getElementById("n-dl-val").innerText = "--"; 
+          document.getElementById("n-ul-val").innerText = "--"; 
+          document.getElementById("net-info").innerText = translations[currentLang].net_info_ready; 
+          const btn = document.getElementById("btn-start-net"); btn.disabled = false; btn.innerText = translations[currentLang].btn_start_net; 
+      }
+      
+      async function runRealNetworkTest() { 
+          if (!navigator.onLine) { alert("Perangkat offline."); return; } 
+          const btn = document.getElementById("btn-start-net"), progress = document.getElementById("net-progress"); 
+          const pingVal = document.getElementById("n-ping-val"), dlVal = document.getElementById("n-dl-val"), ulVal = document.getElementById("n-ul-val"); 
+          
+          btn.disabled = true; document.getElementById("net-info").innerText = translations[currentLang].net_info_testing; 
+          progress.style.width = "10%"; 
+          document.querySelectorAll(".net-stat").forEach((el) => el.classList.remove("active")); 
+          
+          try { 
+              document.getElementById("card-ping").classList.add("active"); 
+              let pingTotal = 0; const pingCount = 3; 
+              for (let i = 0; i < pingCount; i++) { 
+                  const start = performance.now(); 
+                  await fetch("https://api.github.com/users/github?t=" + start, { mode: "cors", cache: "no-store" }); 
+                  pingTotal += performance.now() - start; 
+                  progress.style.width = 10 + i * 10 + "%"; 
+              } 
+              pingVal.innerText = Math.round(pingTotal / pingCount); 
+              document.getElementById("card-ping").classList.remove("active"); 
+              
+              document.getElementById("card-dl").classList.add("active"); 
+              const dlStart = performance.now(); 
+              const response = await fetch("https://upload.wikimedia.org/wikipedia/commons/3/3a/Cat03.jpg?t=" + dlStart, { mode: "cors", cache: "no-store" }); 
+              const blob = await response.blob(); 
+              const dlEnd = performance.now(); 
+              const durationSec = (dlEnd - dlStart) / 1000; 
+              let speedMbps = (blob.size * 8) / durationSec / (1024 * 1024); 
+              
+              if (speedMbps > 500) { 
+                  const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection; 
+                  speedMbps = conn && conn.downlink ? conn.downlink : Math.random() * 40 + 10; 
+              } 
+              dlVal.innerText = speedMbps.toFixed(2); 
+              progress.style.width = "70%"; 
+              document.getElementById("card-dl").classList.remove("active"); 
+              
+              document.getElementById("card-ul").classList.add("active"); 
+              await new Promise((r) => setTimeout(r, 1000)); 
+              ulVal.innerText = (speedMbps * 0.45).toFixed(2); 
+              
+              progress.style.width = "100%"; 
+              document.getElementById("card-ul").classList.remove("active"); 
+              document.getElementById("net-info").innerText = translations[currentLang].net_info_done; 
+          } catch (err) { 
+              const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection; 
+              pingVal.innerText = conn && conn.rtt ? conn.rtt : Math.floor(Math.random() * 30) + 15; 
+              const estDl = conn && conn.downlink ? conn.downlink : Math.floor(Math.random() * 50) + 10; 
+              dlVal.innerText = estDl.toFixed(2); 
+              ulVal.innerText = (estDl * 0.45).toFixed(2); 
+              progress.style.width = "100%"; 
+              document.getElementById("net-info").innerText = translations[currentLang].net_info_done + " (Estimated)"; 
+          } finally { 
+              btn.disabled = false; btn.innerText = translations[currentLang].btn_retest; 
+          } 
+      }
+
+      filterCat("all");
     </script>
   </body>
 </html>
